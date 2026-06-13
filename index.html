@@ -449,7 +449,7 @@ strong, b { font-weight: normal; }
 
 .toast {
   position: fixed;
-  bottom: 110px;
+  bottom: 152px;
   left: 50%;
   transform: translateX(-50%) translateY(12px);
   background: rgba(17,24,68,0.88);
@@ -2064,7 +2064,7 @@ function nextQuestion() {
   var isType = (answerMode === 'type') && (mode !== 'mean');
   var _s = getSettings();
   if (isType) {
-    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅';
+    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅（聲調會使拍數字）';
     $('#listen-input').attr('placeholder', ph).val('').prop('disabled', false);
     $('#listen-result').html('');
     $('#listen-area').removeClass('hide');
@@ -2150,7 +2150,7 @@ function refreshAnswerMode() {
   $('#unknown-btn').addClass('hide');
   var isType = (answerMode === 'type') && (mode !== 'mean');
   if (isType) {
-    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅';
+    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅（聲調會使拍數字）';
     $('#listen-input').attr('placeholder', ph).val('').prop('disabled', false);
     $('#listen-result').html('');
     $('#listen-area').removeClass('hide');
