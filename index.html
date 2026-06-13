@@ -707,6 +707,8 @@ body {
 .filter-btn[data-level="3"] { background: var(--blue); border-color: var(--blue); color: #fff; opacity: 0.55; }
 .filter-btn[data-level="4"] { background: var(--navy); border-color: var(--navy); color: #fff; opacity: 0.55; }
 .filter-btn[data-level]:not([data-level="all"]).active { opacity: 1; outline: 2.5px solid rgba(17,24,68,0.35); outline-offset: 2px; }
+.filter-btn-star { background: #fff7e6; border-color: var(--amber); color: #9a6700; opacity: 1; }
+.filter-btn-star.active { background: var(--amber); color: #fff; border-color: var(--amber); outline-color: rgba(250,185,91,0.5); }
 
 #overview-grid {
   display: grid;
@@ -715,12 +717,25 @@ body {
   padding: 6px 10px 12px;
 }
 
-/* CSS-based filter — hide chips not matching active level */
+/* CSS-based filter */
 #overview-grid[data-filter="0"] .word-chip:not([data-plevel="0"]) { display: none; }
 #overview-grid[data-filter="1"] .word-chip:not([data-plevel="1"]) { display: none; }
 #overview-grid[data-filter="2"] .word-chip:not([data-plevel="2"]) { display: none; }
 #overview-grid[data-filter="3"] .word-chip:not([data-plevel="3"]) { display: none; }
 #overview-grid[data-filter="4"] .word-chip:not([data-plevel="4"]) { display: none; }
+#overview-grid[data-filter="star"] .word-chip:not([data-starred="1"]) { display: none; }
+
+/* 收藏標示：右上角小橘點 */
+.word-chip { position: relative; }
+.word-chip[data-starred="1"]::after {
+  content: '';
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--amber);
+  pointer-events: none;
+}
 
 .word-chip {
   border-radius: 8px;
@@ -888,7 +903,7 @@ body {
   <div id="mode-toggles">
     <div class="tgl-group" id="pool-toggle">
       <button class="tgl active" id="toggle-all">全部</button>
-      <button class="tgl" id="toggle-star">生份<svg viewBox="0 0 24 24" width="12" height="12" style="fill:#bbb;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button>
+      <button class="tgl" id="toggle-star">收藏<svg viewBox="0 0 24 24" width="12" height="12" style="fill:#bbb;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button>
       <div class="tgl-indicator"></div>
     </div>
     <div class="tgl-group" id="answer-toggle">
@@ -1017,6 +1032,7 @@ body {
     <button class="filter-btn" data-level="2">學習中</button>
     <button class="filter-btn" data-level="3">熟練</button>
     <button class="filter-btn" data-level="4">精通</button>
+    <button class="filter-btn filter-btn-star" data-level="star">★ 收藏</button>
   </div>
   <div class="page-body">
     <div id="overview-grid"></div>
@@ -1360,7 +1376,9 @@ $('#reset-modal-overlay, #reset-cancel').click(function() {
 });
 $('#reset-confirm').click(function() {
   localStorage.removeItem(PROF_KEY);
+  localStorage.removeItem(MARKS_KEY);
   $('#reset-modal').addClass('hide');
+  $('#star').removeClass('starred');
   showToast('學習紀錄已重置');
 });
 
@@ -1379,18 +1397,27 @@ var currentFilter = 'all';
 function renderOverview() {
   var data = getProfData();
   var counts = [0, 0, 0, 0, 0];
+  var starCount = 0;
   var html = '';
+
+  // 一次讀取收藏清單建成 set
+  var marksSet = {};
+  var marksList = getMarks();
+  if (marksList) for (var m = 0; m < marksList.length; m++) marksSet[marksList[m]] = true;
 
   for (var i = 0; i < moe700.length; i++) {
     var q = moe700[i];
     var score = data[q.no] || 0;
     var level = scoreToProfLevel(score);
     counts[level]++;
+    var starred = marksSet[q.no + ''] ? true : false;
+    if (starred) starCount++;
     var displayWord = q.word.replace(/\(.*?\)/g, '').trim();
     var displayRead = (q.read[0] || '').replace(/\(.*?\)/g, '').trim();
     var visLen = displayRead.normalize('NFD').replace(/[̀-ͯ]/g, '').length;
     var readSize = visLen <= 4 ? '11px' : visLen <= 7 ? '10px' : visLen <= 10 ? '9px' : '8px';
-    html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '">'
+    html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '"'
+          + (starred ? ' data-starred="1"' : '') + '>'
           + '<span class="chip-hanzi">' + displayWord + '</span>'
           + '<span class="chip-read" style="font-size:' + readSize + '">' + displayRead + '</span>'
           + '</button>';
@@ -1407,6 +1434,7 @@ function renderOverview() {
   $('.filter-btn[data-level="2"]').text('學習 ' + counts[2]);
   $('.filter-btn[data-level="3"]').text('熟練 ' + counts[3]);
   $('.filter-btn[data-level="4"]').text('精通 ' + counts[4]);
+  $('.filter-btn[data-level="star"]').text('★ 收藏 ' + starCount);
 
   applyOverviewFilter();
 }
@@ -1717,11 +1745,11 @@ $('#star').click(function() {
   if (wasStarred) {
     setMarked(no, false);
     $(this).removeClass('starred');
-    showToast('已從生份移除');
+    showToast('已從收藏移除');
   } else {
     setMarked(no, true);
     $(this).addClass('starred');
-    showToast('已加入生份的詞');
+    showToast('已加入收藏');
   }
 });
 
