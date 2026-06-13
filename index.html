@@ -853,8 +853,19 @@ body {
   </button>
   <button id="show">對答案</button>
   <button id="next" class="hide">後一條</button>
-  <button id="knew-btn" class="hide">✓ 認得</button>
-  <button id="unknown-btn" class="hide">✗ 不認得</button>
+  <button id="knew-btn" class="hide">
+    <svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="2,9 7,14 16,4"/>
+    </svg>
+    認得
+  </button>
+  <button id="unknown-btn" class="hide">
+    <svg viewBox="0 0 18 18" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="3.5" y1="3.5" x2="14.5" y2="14.5"/>
+      <line x1="14.5" y1="3.5" x2="3.5" y2="14.5"/>
+    </svg>
+    不認得
+  </button>
 </div>
 
 <!-- 漢堡選單 -->
@@ -1517,9 +1528,11 @@ $('#show').click(function() {
     var inp = $('#listen-input').val();
     if (inp.trim()) {
       var ok = checkAnswer(currentQ, inp);
+      var svgCheck = '<svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px"><polyline points="2,9 7,14 16,4"/></svg>';
+      var svgCross = '<svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px"><line x1="3.5" y1="3.5" x2="14.5" y2="14.5"/><line x1="14.5" y1="3.5" x2="3.5" y2="14.5"/></svg>';
       $('#listen-result').html(ok
-        ? '<span class="result-correct">✓ 正確！</span>'
-        : '<span class="result-wrong">✗ 毋著</span>');
+        ? '<span class="result-correct">' + svgCheck + '正確！</span>'
+        : '<span class="result-wrong">' + svgCross + '毋著</span>');
       if (ok && currentQ) addScore(currentQ.no, 3);
     }
   }
