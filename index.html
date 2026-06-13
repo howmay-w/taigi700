@@ -1125,7 +1125,7 @@ body {
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
     </svg>
   </button>
-  <button id="show">對答案</button>
+  <button id="show">看答案</button>
   <button id="next" class="hide">後一條</button>
   <button id="knew-btn" class="hide">
     <svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -1355,14 +1355,12 @@ body {
         <div class="settings-row">
           <div class="settings-row-label">
             <span>字卡模式自動播音</span>
-            <small>翻題練習時，顯示新詞後自動播音</small>
           </div>
           <button class="ios-toggle" id="autoplay-show-toggle" aria-label="字卡模式自動播音"></button>
         </div>
         <div class="settings-row">
           <div class="settings-row-label">
             <span>拍字模式自動播音</span>
-            <small>打字練習時，顯示新詞後自動播音</small>
           </div>
           <button class="ios-toggle on" id="autoplay-type-toggle" aria-label="拍字模式自動播音"></button>
         </div>
@@ -1929,7 +1927,7 @@ function nextQuestion() {
     if (_s.autoplay_type) setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
   } else {
     $('#listen-area').addClass('hide');
-    $('#show').text('對答案').prop('disabled', false);
+    $('#show').text('看答案').prop('disabled', false);
     if (_s.autoplay_show) setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
   }
 
@@ -2017,7 +2015,7 @@ function refreshAnswerMode() {
     if (getSettings().autoplay_type) setTimeout(function() { playAudio(wordAudioSrc(currentQ)); }, 200);
   } else {
     $('#listen-area').addClass('hide');
-    $('#show').text('對答案').prop('disabled', false).removeClass('hide');
+    $('#show').text('看答案').prop('disabled', false).removeClass('hide');
     $('#next').addClass('hide');
   }
 }
@@ -2097,11 +2095,11 @@ $('#star').click(function() {
   if (wasStarred) {
     setMarked(no, false);
     $(this).removeClass('starred');
-    showToast('已從收藏移除');
+    showToast('已經取消收藏');
   } else {
     setMarked(no, true);
     $(this).addClass('starred');
-    showToast('已加入收藏');
+    showToast('已經收藏');
   }
 });
 
