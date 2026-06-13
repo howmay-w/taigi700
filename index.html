@@ -414,6 +414,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   background: #8EB486;
   color: #fff;
   border: none;
@@ -429,6 +430,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   background: #FF6060;
   color: #fff;
   border: none;
@@ -532,6 +534,8 @@ body {
   transition: color 0.15s, background 0.15s;
 }
 .menu-item:hover { color: #fff; background: rgba(255,255,255,0.07); border-radius: 8px; }
+.menu-item:focus-visible { outline: 2px solid rgba(255,255,255,0.7); outline-offset: -3px; border-radius: 8px; }
+#menu-close:focus-visible { outline: 2px solid rgba(255,255,255,0.7); }
 .menu-item svg { flex-shrink: 0; opacity: 0.7; }
 
 /* ── 頁面 overlay ─────────────────────────────────────── */
@@ -609,7 +613,7 @@ body {
 /* 全部 */
 .filter-btn[data-level="all"].active { background: var(--blue); color: #fff; border-color: var(--blue); }
 /* 各熟練等級按鈕：平時半透明，active 全亮＋外框 */
-.filter-btn[data-level="0"] { background: #fff; border-color: #c8c0b8; color: var(--navy); opacity: 0.55; }
+.filter-btn[data-level="0"] { background: #fff; border-color: transparent; color: var(--navy); opacity: 0.55; }
 .filter-btn[data-level="1"] { background: #bfcfe8; border-color: #bfcfe8; color: var(--navy); opacity: 0.55; }
 .filter-btn[data-level="2"] { background: var(--slate); border-color: var(--slate); color: #fff; opacity: 0.55; }
 .filter-btn[data-level="3"] { background: var(--blue); border-color: var(--blue); color: #fff; opacity: 0.55; }
