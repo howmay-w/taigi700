@@ -40,6 +40,8 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 
+html { background: var(--navy) }
+
 body {
   background: var(--beige);
   font-family: 'Huninn', sans-serif;
@@ -601,8 +603,8 @@ function showToast(msg) {
   var $t = $('<div class="toast">' + msg + '</div>');
   $('body').append($t);
   setTimeout(function() { $t.addClass('show'); }, 10);
-  setTimeout(function() { $t.removeClass('show'); }, 2200);
-  setTimeout(function() { $t.remove(); }, 2600);
+  setTimeout(function() { $t.removeClass('show'); }, 1000);
+  setTimeout(function() { $t.remove(); }, 1400);
 }
 
 function applyMask() {
