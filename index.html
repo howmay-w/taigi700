@@ -394,7 +394,7 @@ body {
   cursor: pointer;
 }
 #show:hover { background: var(--navy) }
-#show:disabled { background: var(--stone); color: var(--slate); cursor: default; }
+#show:disabled { opacity: 0.35; cursor: default; }
 
 #next {
   flex: 1;
@@ -883,7 +883,7 @@ body {
   <div id="mode-tabs">
     <button class="mode-tab active" data-mode="word">漢字</button>
     <button class="mode-tab" data-mode="read">台羅</button>
-    <button class="mode-tab" data-mode="mean">華語解釋</button>
+    <button class="mode-tab" data-mode="mean">華語解說</button>
   </div>
   <div id="mode-toggles">
     <div class="tgl-group" id="pool-toggle">
@@ -892,7 +892,7 @@ body {
       <div class="tgl-indicator"></div>
     </div>
     <div class="tgl-group" id="answer-toggle">
-      <button class="tgl active" id="toggle-show">顯示</button>
+      <button class="tgl active" id="toggle-show">字卡</button>
       <button class="tgl" id="toggle-type">拍字</button>
       <div class="tgl-indicator"></div>
     </div>
@@ -950,14 +950,14 @@ body {
     <svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="2,9 7,14 16,4"/>
     </svg>
-    認得
+    熟手
   </button>
   <button id="unknown-btn" class="hide">
     <svg viewBox="0 0 18 18" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
       <line x1="3.5" y1="3.5" x2="14.5" y2="14.5"/>
       <line x1="14.5" y1="3.5" x2="3.5" y2="14.5"/>
     </svg>
-    不認得
+    不熟手
   </button>
 </div>
 
@@ -1062,7 +1062,7 @@ body {
         <div class="about-section">
           <h2>答題方式</h2>
           <div class="about-mode-row">
-            <span class="about-tag">顯示</span>
+            <span class="about-tag">字卡</span>
             <p>翻出答案了後家己來評估——按「認得」抑是「毋認得」，系統就會記落熟練分數。</p>
           </div>
           <div class="about-mode-row">
@@ -1114,13 +1114,13 @@ body {
           </div>
           <div class="about-mode-row">
             <span class="about-tag">華語</span>
-            <p>遮住華語解釋，看漢字與台羅，回想詞義。</p>
+            <p>遮住華語解說，看漢字與台羅，回想詞義。</p>
           </div>
         </div>
         <div class="about-section">
           <h2>答題方式</h2>
           <div class="about-mode-row">
-            <span class="about-tag">顯示</span>
+            <span class="about-tag">字卡</span>
             <p>翻出答案後自評——按「認得」或「不認得」，系統依此記錄熟練分數。</p>
           </div>
           <div class="about-mode-row">
