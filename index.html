@@ -637,27 +637,52 @@ body {
 .plv-3 { background: var(--blue); color: #fff; }
 .plv-4 { background: var(--navy); color: #fff; }
 
+/* ── 介紹頁語言切換 ──────────────────────────────────── */
+#about-lang-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 3px;
+  gap: 2px;
+  margin-left: auto;
+}
+.alang-btn {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  padding: 4px 11px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.alang-btn.active { background: rgba(255,255,255,0.22); color: #fff; }
+
 /* ── 介紹頁 ───────────────────────────────────────────── */
 #about-content {
-  padding: 24px 20px 40px;
+  padding: 0 20px 40px;
   max-width: 520px;
   margin: 0 auto;
 }
+.about-section {
+  padding: 22px 0 20px;
+  border-bottom: 1.5px solid var(--stone);
+}
+.about-section:last-child { border-bottom: none; }
 #about-content h2 {
   font-family: 'Huninn', sans-serif;
   font-size: 17px;
   color: var(--navy);
-  margin: 28px 0 10px;
-  padding-bottom: 6px;
-  border-bottom: 1.5px solid var(--stone);
+  margin: 0 0 12px;
 }
-#about-content h2:first-child { margin-top: 0; }
 #about-content p {
   font-family: 'Huninn', sans-serif;
-  font-size: 14px;
+  font-size: 15.5px;
   color: #555;
   line-height: 1.9;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .about-mode-row {
   display: flex;
@@ -717,7 +742,7 @@ body {
 
 <div id="header">
   <div id="header-title-row">
-    <span id="header-title">台語700單字卡</span>
+    <span id="header-title">台語 700 單字卡</span>
     <button id="menu-btn" aria-label="選單">&#9776;</button>
   </div>
   <div id="mode-tabs">
@@ -830,55 +855,126 @@ body {
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <span class="page-title">關於本站</span>
+    <div id="about-lang-toggle">
+      <button class="alang-btn active" data-lang="taigi">台語</button>
+      <button class="alang-btn" data-lang="zh">華語</button>
+    </div>
   </div>
   <div class="page-body">
     <div id="about-content">
-      <h2>台語 700 是什麼？</h2>
-      <p>本站依據教育部《臺灣閩南語常用詞辭典》精選 700 個基礎詞彙，提供互動式練習，幫助學習者熟悉台語漢字、台羅拼音及對應華語意思。</p>
 
-      <h2>練習模式</h2>
-      <div class="about-mode-row">
-        <span class="about-tag">漢字</span>
-        <p>遮住漢字，看台羅拼音與華語意思，猜出漢字寫法。</p>
-      </div>
-      <div class="about-mode-row">
-        <span class="about-tag">台羅</span>
-        <p>遮住台羅，看漢字與華語意思，練習拼音拼寫。</p>
-      </div>
-      <div class="about-mode-row">
-        <span class="about-tag">華語</span>
-        <p>遮住華語解釋，看漢字與台羅，回想詞義。</p>
+      <!-- 台語版 (預設顯示) -->
+      <div class="about-lang" id="about-taigi">
+        <div class="about-section">
+          <h2>台語 700 是啥物？</h2>
+          <p>本站根據教育部《臺灣閩南語常用詞辭典》揀出 700 个基礎詞彙，設計互動式練習，幫助學習者熟曉台語漢字、台羅拼音佮對應華語詞義。</p>
+        </div>
+        <div class="about-section">
+          <h2>練習模式</h2>
+          <div class="about-mode-row">
+            <span class="about-tag">漢字</span>
+            <p>遮起漢字，看台羅拼音佮華語意思，猜出漢字的寫法。</p>
+          </div>
+          <div class="about-mode-row">
+            <span class="about-tag">台羅</span>
+            <p>遮起台羅，看漢字佮華語意思，練習拼音拍字。</p>
+          </div>
+          <div class="about-mode-row">
+            <span class="about-tag">華語</span>
+            <p>遮起華語解說，看漢字佮台羅，想看覓詞義。</p>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>答題方式</h2>
+          <div class="about-mode-row">
+            <span class="about-tag">顯示</span>
+            <p>翻出答案了後家己來評估——按「認得」抑是「毋認得」，系統就會記落熟練分數。</p>
+          </div>
+          <div class="about-mode-row">
+            <span class="about-tag">拍字</span>
+            <p>直接輸入答案，打字答對會得著較高分數，記持效果較好。</p>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>熟練度計分</h2>
+          <p>每个詞有獨立的累積分數，答題了後自動更新：</p>
+          <div class="score-row">
+            <div class="score-badge">翻題認得 <strong>+2 分</strong></div>
+            <div class="score-badge">翻題毋認得 <strong>+1 分</strong></div>
+            <div class="score-badge">打字答對 <strong>+3 分</strong></div>
+            <div class="score-badge">打字答錯 <strong>+0 分</strong></div>
+          </div>
+          <p>分數累積了後自動升等：</p>
+          <div class="prof-legend">
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--stone);border:1px solid #ccc"></div>猶未接觸（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>有接觸過（1–5 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--navy)"></div>精通（31 分以上）</div>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>資料來源</h2>
+          <p>詞彙選自教育部《臺灣閩南語常用詞辭典》，音訊由教育部語文成就評量資料庫提供。</p>
+        </div>
       </div>
 
-      <h2>答題方式</h2>
-      <div class="about-mode-row">
-        <span class="about-tag">顯示</span>
-        <p>翻出答案後自評——按「認得」或「不認得」，系統依此記錄熟練分數。</p>
-      </div>
-      <div class="about-mode-row">
-        <span class="about-tag">拍字</span>
-        <p>直接輸入答案，打字答對給予較高分數，強化記憶效果。</p>
+      <!-- 華語版 -->
+      <div class="about-lang hide" id="about-zh">
+        <div class="about-section">
+          <h2>台語 700 是什麼？</h2>
+          <p>本站依據教育部《臺灣閩南語常用詞辭典》精選 700 個基礎詞彙，提供互動式練習，幫助學習者熟悉台語漢字、台羅拼音及對應華語意思。</p>
+        </div>
+        <div class="about-section">
+          <h2>練習模式</h2>
+          <div class="about-mode-row">
+            <span class="about-tag">漢字</span>
+            <p>遮住漢字，看台羅拼音與華語意思，猜出漢字寫法。</p>
+          </div>
+          <div class="about-mode-row">
+            <span class="about-tag">台羅</span>
+            <p>遮住台羅，看漢字與華語意思，練習拼音拼寫。</p>
+          </div>
+          <div class="about-mode-row">
+            <span class="about-tag">華語</span>
+            <p>遮住華語解釋，看漢字與台羅，回想詞義。</p>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>答題方式</h2>
+          <div class="about-mode-row">
+            <span class="about-tag">顯示</span>
+            <p>翻出答案後自評——按「認得」或「不認得」，系統依此記錄熟練分數。</p>
+          </div>
+          <div class="about-mode-row">
+            <span class="about-tag">拍字</span>
+            <p>直接輸入答案，打字答對給予較高分數，強化記憶效果。</p>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>熟練度計分</h2>
+          <p>每個詞有獨立的累積分數，答題後自動更新：</p>
+          <div class="score-row">
+            <div class="score-badge">翻題認得 <strong>+2 分</strong></div>
+            <div class="score-badge">翻題不認得 <strong>+1 分</strong></div>
+            <div class="score-badge">打字答對 <strong>+3 分</strong></div>
+            <div class="score-badge">打字答錯 <strong>+0 分</strong></div>
+          </div>
+          <p>分數累積後自動升級：</p>
+          <div class="prof-legend">
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--stone);border:1px solid #ccc"></div>未接觸（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸過（1–5 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--navy)"></div>精通（31 分以上）</div>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>資料來源</h2>
+          <p>詞彙選自教育部《臺灣閩南語常用詞辭典》，音訊由教育部語文成就評量資料庫提供。</p>
+        </div>
       </div>
 
-      <h2>熟練度計分</h2>
-      <p>每個詞有獨立的累積分數，答題後自動更新：</p>
-      <div class="score-row">
-        <div class="score-badge">翻題認得 <strong>+2 分</strong></div>
-        <div class="score-badge">翻題不認得 <strong>+1 分</strong></div>
-        <div class="score-badge">打字答對 <strong>+3 分</strong></div>
-        <div class="score-badge">打字答錯 <strong>+0 分</strong></div>
-      </div>
-      <p>分數累積後自動升級：</p>
-      <div class="prof-legend">
-        <div class="prof-badge"><div class="prof-dot" style="background:var(--stone);border:1px solid #ccc"></div>未接觸（0 分）</div>
-        <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸過（1–5 分）</div>
-        <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
-        <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
-        <div class="prof-badge"><div class="prof-dot" style="background:var(--navy)"></div>精通（31 分以上）</div>
-      </div>
-
-      <h2>資料來源</h2>
-      <p>詞彙選自教育部《臺灣閩南語常用詞辭典》，音訊由教育部語文成就評量資料庫提供。</p>
     </div>
   </div>
 </div>
@@ -1075,6 +1171,14 @@ $('#goto-overview').click(function() { showPage('overview'); });
 $('#goto-about').click(function() { showPage('about'); });
 $('#overview-back').click(function() { showPage('quiz'); });
 $('#about-back').click(function() { showPage('quiz'); });
+
+$('#about-lang-toggle').on('click', '.alang-btn', function() {
+  var lang = $(this).data('lang');
+  $('.alang-btn').removeClass('active');
+  $(this).addClass('active');
+  $('.about-lang').addClass('hide');
+  $('#about-' + lang).removeClass('hide');
+});
 
 // ── 總覽頁渲染 ────────────────────────────────────────────
 
