@@ -1293,6 +1293,13 @@ strong, b { font-weight: normal; }
     </svg>
     資料佮設定
   </button>
+  <button class="menu-item hide" id="install-pwa-btn">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2v13M8 11l4 4 4-4"/>
+      <path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/>
+    </svg>
+    加入主畫面
+  </button>
 </div>
 
 <!-- 重置確認 modal -->
@@ -1455,18 +1462,6 @@ strong, b { font-weight: normal; }
   </div>
   <div class="page-body">
     <div id="settings-content">
-      <div class="settings-section hide" id="install-section">
-        <div class="settings-section-title">安裝</div>
-        <div class="settings-action-list">
-          <button class="settings-action-btn" id="install-pwa-btn">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v13M8 11l4 4 4-4"/>
-              <path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/>
-            </svg>
-            加入主畫面
-          </button>
-        </div>
-      </div>
       <div class="settings-section">
         <div class="settings-section-title">偏好設定</div>
         <div class="settings-row">
@@ -2288,18 +2283,18 @@ var isIOS = /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase());
 var isStandalone = (navigator.standalone === true) || window.matchMedia('(display-mode: standalone)').matches;
 
 if (!isStandalone) {
-  if (isIOS) $('#install-section').removeClass('hide');
+  if (isIOS) $('#install-pwa-btn').removeClass('hide');
 }
 
 window.addEventListener('beforeinstallprompt', function(e) {
   e.preventDefault();
   deferredInstallPrompt = e;
-  if (!isStandalone) $('#install-section').removeClass('hide');
+  if (!isStandalone) $('#install-pwa-btn').removeClass('hide');
 });
 
 window.addEventListener('appinstalled', function() {
   deferredInstallPrompt = null;
-  $('#install-section').addClass('hide');
+  $('#install-pwa-btn').addClass('hide');
 });
 
 $('#install-pwa-btn').click(function() {
