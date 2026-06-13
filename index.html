@@ -182,19 +182,19 @@ body {
 #dict-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   font-family: 'Huninn', sans-serif;
-  font-size: 12px;
-  color: var(--slate);
+  font-size: 11px;
+  color: var(--stone);
   text-decoration: none;
-  padding: 4px 9px;
-  border-radius: 7px;
+  padding: 3px 6px;
+  border-radius: 6px;
   border: none;
-  background: var(--beige);
+  background: none;
   flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s;
 }
-#dict-btn:hover { color: var(--navy); background: var(--stone); }
+#dict-btn:hover { color: var(--slate); }
 
 #word {
   font-family: 'Iansui', sans-serif;
@@ -1374,7 +1374,7 @@ function nextQuestion() {
   $('#no').text('No. ' + q.no);
   $('#word').text(q.word);
   var dictWord = q.word.replace(/\(.*?\)/g, '').trim();
-  $('#dict-btn').attr('href', 'https://sutian.moe.edu.tw/zh-hant/su/?su=' + encodeURIComponent(dictWord));
+  $('#dict-btn').attr('href', 'https://sutian.moe.edu.tw/zh-hant/tshiau/?lui=tai_su&tsha=' + encodeURIComponent(dictWord));
   $('#read1').html(reads1);
   $('#read2').html(reads2);
   var meanText = q.mean.replace(/\(/g, '（').replace(/\)/g, '）');
