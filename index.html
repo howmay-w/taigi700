@@ -583,9 +583,17 @@ body {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: opacity 0.15s, outline 0.15s;
 }
-.filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+/* 全部 */
+.filter-btn[data-level="all"].active { background: var(--blue); color: #fff; border-color: var(--blue); }
+/* 各熟練等級按鈕：平時半透明，active 全亮＋外框 */
+.filter-btn[data-level="0"] { background: #fff; border-color: #c8c0b8; color: var(--navy); opacity: 0.55; }
+.filter-btn[data-level="1"] { background: #bfcfe8; border-color: #bfcfe8; color: var(--navy); opacity: 0.55; }
+.filter-btn[data-level="2"] { background: var(--slate); border-color: var(--slate); color: #fff; opacity: 0.55; }
+.filter-btn[data-level="3"] { background: var(--blue); border-color: var(--blue); color: #fff; opacity: 0.55; }
+.filter-btn[data-level="4"] { background: var(--navy); border-color: var(--navy); color: #fff; opacity: 0.55; }
+.filter-btn[data-level]:not([data-level="all"]).active { opacity: 1; outline: 2.5px solid rgba(17,24,68,0.35); outline-offset: 2px; }
 
 #overview-grid {
   display: grid;
@@ -674,7 +682,7 @@ body {
 }
 .about-section {
   padding: 22px 0 20px;
-  border-bottom: 1.5px solid var(--stone);
+  border-bottom: 1.5px solid #fff;
 }
 .about-section:last-child { border-bottom: none; }
 #about-content h2 {
@@ -912,7 +920,7 @@ body {
           </div>
           <p>分數累積了後自動升等：</p>
           <div class="prof-legend">
-            <div class="prof-badge"><div class="prof-dot" style="background:var(--stone);border:1px solid #ccc"></div>猶未接觸（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#fff;border:1.5px solid #ccc"></div>猶未接觸（0 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>有接觸過（1–5 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
@@ -968,7 +976,7 @@ body {
           </div>
           <p>分數累積後自動升級：</p>
           <div class="prof-legend">
-            <div class="prof-badge"><div class="prof-dot" style="background:var(--stone);border:1px solid #ccc"></div>未接觸（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#fff;border:1.5px solid #ccc"></div>未接觸（0 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸過（1–5 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
