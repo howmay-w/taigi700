@@ -58,6 +58,31 @@ body {
   flex-shrink: 0;
 }
 
+#header-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+#header-title {
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.5px;
+}
+#menu-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.65);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+#menu-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
 #mode-tabs {
   display: flex;
   gap: 6px;
@@ -358,6 +383,32 @@ body {
 }
 #next:hover { background: #060c22 }
 
+/* ── 自評按鈕 ─────────────────────────────────────────── */
+#knew-btn {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  padding: 10px 8px 12px;
+  background: #d8efd6;
+  color: #2e6b29;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#knew-btn:hover { background: #c4e6c0; }
+#unknown-btn {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  padding: 10px 8px 12px;
+  background: #f0dada;
+  color: #7a3535;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#unknown-btn:hover { background: #e8c5c5; }
+
 .toast {
   position: fixed;
   bottom: 110px;
@@ -381,6 +432,7 @@ body {
 
 @media (max-height: 700px) {
   #header { padding: 8px 12px 8px; padding-top: calc(8px + env(safe-area-inset-top)); }
+  #header-title-row { margin-bottom: 4px; }
   #mode-tabs { margin-bottom: 6px; }
   .mode-tab { padding: 7px 2px; font-size: 13px; }
   .tgl { padding: 4px 0; font-size: 13px; }
@@ -399,11 +451,274 @@ body {
   #bottom-bar { padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
   #bottom-bar > button { height: 42px; }
 }
+
+/* ── 漢堡選單 ─────────────────────────────────────────── */
+#menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+}
+#menu-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 210px;
+  background: var(--navy);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px 20px;
+  padding-top: calc(16px + env(safe-area-inset-top));
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#menu-drawer.open { transform: translateX(0); }
+#menu-close {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+#menu-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.menu-item {
+  font-family: 'Huninn', sans-serif;
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+  padding: 14px 8px;
+  cursor: pointer;
+  border-radius: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.15s, background 0.15s;
+}
+.menu-item:hover { color: #fff; background: rgba(255,255,255,0.07); border-radius: 8px; }
+.menu-item svg { flex-shrink: 0; opacity: 0.7; }
+
+/* ── 頁面 overlay ─────────────────────────────────────── */
+.page {
+  position: fixed;
+  inset: 0;
+  background: var(--beige);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.page-header {
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  padding-top: calc(14px + env(safe-area-inset-top));
+  flex-shrink: 0;
+}
+.page-back {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.75);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.page-back:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.page-title {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: #fff;
+  flex: 1;
+}
+.page-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+/* ── 總覽頁 ───────────────────────────────────────────── */
+#overview-stats-inline {
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+}
+#overview-filter {
+  display: flex;
+  gap: 6px;
+  padding: 10px 10px 6px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  background: var(--beige);
+}
+#overview-filter::-webkit-scrollbar { display: none; }
+.filter-btn {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 14px;
+  border: 1.5px solid var(--stone);
+  background: #fff;
+  color: var(--slate);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+#overview-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  padding: 6px 10px 12px;
+}
+
+/* CSS-based filter — hide chips not matching active level */
+#overview-grid[data-filter="0"] .word-chip:not([data-plevel="0"]) { display: none; }
+#overview-grid[data-filter="1"] .word-chip:not([data-plevel="1"]) { display: none; }
+#overview-grid[data-filter="2"] .word-chip:not([data-plevel="2"]) { display: none; }
+#overview-grid[data-filter="3"] .word-chip:not([data-plevel="3"]) { display: none; }
+#overview-grid[data-filter="4"] .word-chip:not([data-plevel="4"]) { display: none; }
+
+.word-chip {
+  border-radius: 8px;
+  padding: 5px 3px 6px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  transition: opacity 0.12s, transform 0.1s;
+}
+.word-chip:hover { opacity: 0.78; transform: scale(0.96); }
+.chip-hanzi {
+  font-family: 'Iansui', sans-serif;
+  font-size: 14px;
+  line-height: 1.2;
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 2px;
+}
+.chip-read {
+  font-family: NunitoPOJ, sans-serif;
+  font-size: 8px;
+  line-height: 1.2;
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 2px;
+}
+/* 熟練度顏色 */
+.plv-0 { background: var(--stone); color: var(--navy); }
+.plv-1 { background: #bfcfe8; color: var(--navy); }
+.plv-2 { background: var(--slate); color: #fff; }
+.plv-3 { background: var(--blue); color: #fff; }
+.plv-4 { background: var(--navy); color: #fff; }
+
+/* ── 介紹頁 ───────────────────────────────────────────── */
+#about-content {
+  padding: 24px 20px 40px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+#about-content h2 {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: var(--navy);
+  margin: 28px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--stone);
+}
+#about-content h2:first-child { margin-top: 0; }
+#about-content p {
+  font-family: 'Huninn', sans-serif;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.9;
+  margin-bottom: 6px;
+}
+.about-mode-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+.about-tag {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 6px;
+  padding: 3px 9px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.about-tag.green { background: #5a9e54; }
+.score-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.score-badge {
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  background: #fff;
+  border: 1.5px solid var(--stone);
+  border-radius: 8px;
+  padding: 5px 12px;
+  color: var(--navy);
+}
+.score-badge strong { color: var(--blue); }
+.prof-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.prof-badge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  color: #555;
+}
+.prof-dot {
+  width: 28px; height: 18px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
 </style>
 </head>
 <body>
 
 <div id="header">
+  <div id="header-title-row">
+    <span id="header-title">台語 700</span>
+    <button id="menu-btn" aria-label="選單">&#9776;</button>
+  </div>
   <div id="mode-tabs">
     <button class="mode-tab active" data-mode="word">漢字</button>
     <button class="mode-tab" data-mode="read">台羅</button>
@@ -462,6 +777,109 @@ body {
   </button>
   <button id="show">對答案</button>
   <button id="next" class="hide">後一條</button>
+  <button id="knew-btn" class="hide">✓ 認得</button>
+  <button id="unknown-btn" class="hide">✗ 不認得</button>
+</div>
+
+<!-- 漢堡選單 -->
+<div id="menu-overlay" class="hide"></div>
+<div id="menu-drawer">
+  <button id="menu-close">✕</button>
+  <button class="menu-item" id="goto-overview">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+    </svg>
+    字卡總覽
+  </button>
+  <button class="menu-item" id="goto-about">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    關於本站
+  </button>
+</div>
+
+<!-- 總覽頁 -->
+<div id="overview-page" class="page hide">
+  <div class="page-header">
+    <button class="page-back" id="overview-back">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="page-title">字卡總覽</span>
+    <span id="overview-stats-inline"></span>
+  </div>
+  <div id="overview-filter">
+    <button class="filter-btn active" data-level="all">全部</button>
+    <button class="filter-btn" data-level="0">未學</button>
+    <button class="filter-btn" data-level="1">接觸過</button>
+    <button class="filter-btn" data-level="2">學習中</button>
+    <button class="filter-btn" data-level="3">熟練</button>
+    <button class="filter-btn" data-level="4">精通</button>
+  </div>
+  <div class="page-body">
+    <div id="overview-grid"></div>
+  </div>
+</div>
+
+<!-- 介紹頁 -->
+<div id="about-page" class="page hide">
+  <div class="page-header">
+    <button class="page-back" id="about-back">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="page-title">關於本站</span>
+  </div>
+  <div class="page-body">
+    <div id="about-content">
+      <h2>台語 700 是什麼？</h2>
+      <p>本站依據教育部《臺灣閩南語常用詞辭典》精選 700 個基礎詞彙，提供互動式練習，幫助學習者熟悉台語漢字、台羅拼音及對應華語意思。</p>
+
+      <h2>練習模式</h2>
+      <div class="about-mode-row">
+        <span class="about-tag">漢字</span>
+        <p>遮住漢字，看台羅拼音與華語意思，猜出漢字寫法。</p>
+      </div>
+      <div class="about-mode-row">
+        <span class="about-tag">台羅</span>
+        <p>遮住台羅，看漢字與華語意思，練習拼音拼寫。</p>
+      </div>
+      <div class="about-mode-row">
+        <span class="about-tag">華語</span>
+        <p>遮住華語解釋，看漢字與台羅，回想詞義。</p>
+      </div>
+
+      <h2>答題方式</h2>
+      <div class="about-mode-row">
+        <span class="about-tag">顯示</span>
+        <p>翻出答案後自評——按「認得」或「不認得」，系統依此記錄熟練分數。</p>
+      </div>
+      <div class="about-mode-row">
+        <span class="about-tag">拍字</span>
+        <p>直接輸入答案，打字答對給予較高分數，強化記憶效果。</p>
+      </div>
+
+      <h2>熟練度計分</h2>
+      <p>每個詞有獨立的累積分數，答題後自動更新：</p>
+      <div class="score-row">
+        <div class="score-badge">翻題認得 <strong>+2 分</strong></div>
+        <div class="score-badge">翻題不認得 <strong>+1 分</strong></div>
+        <div class="score-badge">打字答對 <strong>+3 分</strong></div>
+        <div class="score-badge">打字答錯 <strong>+0 分</strong></div>
+      </div>
+      <p>分數累積後自動升級：</p>
+      <div class="prof-legend">
+        <div class="prof-badge"><div class="prof-dot" style="background:var(--stone);border:1px solid #ccc"></div>未接觸（0 分）</div>
+        <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸過（1–5 分）</div>
+        <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
+        <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
+        <div class="prof-badge"><div class="prof-dot" style="background:var(--navy)"></div>精通（31 分以上）</div>
+      </div>
+
+      <h2>資料來源</h2>
+      <p>詞彙選自教育部《臺灣閩南語常用詞辭典》，音訊由教育部語文成就評量資料庫提供。</p>
+    </div>
+  </div>
 </div>
 
 <audio id="player"></audio>
@@ -507,45 +925,30 @@ var TONE_DIA = {
   '̋': 9, // a̋  double acute
 };
 
-// 將單一音節（允許含聲調符號或尾數字）轉為 base+數字 形式
-// 例：bô → bo5  kah → kah4  tsang9 → tsang9  a → a1
 function syllableToNumbered(syl) {
   syl = syl.trim().toLowerCase();
   if (!syl) return '';
-
-  // 已經有數字調號（字母後接單一數字）
   var numMatch = syl.match(/^([a-zÀ-ɏ]+)([1-9])$/i);
   if (numMatch) {
-    // 去掉字母部分的聲調符號（使用者可能混用）
     var base = numMatch[1].normalize('NFD').replace(/[̀-ͯ]/g, '');
     return base + numMatch[2];
   }
-
-  // 含聲調符號 → 掃描 NFD 找 combining char
   var nfd = syl.normalize('NFD');
   var tone = 0;
   var base = '';
   for (var i = 0; i < nfd.length; i++) {
     var t = TONE_DIA[nfd[i]];
-    if (t !== undefined) {
-      tone = t;
-    } else {
-      base += nfd[i];
-    }
+    if (t !== undefined) { tone = t; } else { base += nfd[i]; }
   }
-  // 無聲調符號：結尾 p/t/k/h 為第四調，否則第一調
   if (tone === 0) tone = /[ptkh]$/.test(base) ? 4 : 1;
   return base + tone;
 }
 
-// 將完整讀音字串（含 - 分隔）轉為 numbered form 陣列
 function readToNumbered(str) {
   return str.trim().split(/[\s-]+/).map(syllableToNumbered);
 }
 
 function optionalVariants(str) {
-  // "小可(仔)" → ["小可", "小可仔"]
-  // "sió-khuá(-á)" → ["sió-khuá", "sió-khuá-á"]
   var base = str.replace(/\(.*?\)/g, '').replace(/[-\s]+$/, '').replace(/[-\s]{2,}/g, '-').trim();
   var full = str.replace(/[()]/g, '').trim();
   return base === full ? [base] : [base, full];
@@ -557,12 +960,8 @@ function checkAnswer(q, input) {
     var variants = optionalVariants(q.word);
     return variants.indexOf(inp) !== -1;
   }
-
-  // 台羅模式：必須調號正確（符號或數字皆可）
-  // 多音節必須有空格或 - 分隔
   var inputParts = input.trim().split(/[\s-]+/).map(syllableToNumbered);
   var inputKey = inputParts.join('-');
-
   var reads = (q.read || []).concat(q.read2 || []);
   for (var i = 0; i < reads.length; i++) {
     var variants = optionalVariants(reads[i]);
@@ -618,6 +1017,146 @@ function removeMasks() {
   $('#word, #read, #mean').removeClass('masked');
 }
 
+// ── 熟練度系統 ──────────────────────────────────────────
+
+var PROF_KEY = 'taigi700_proficiency';
+
+function getProfData() {
+  return JSON.parse(localStorage.getItem(PROF_KEY) || '{}');
+}
+
+function addScore(no, delta) {
+  var data = getProfData();
+  data[no] = (data[no] || 0) + delta;
+  localStorage.setItem(PROF_KEY, JSON.stringify(data));
+}
+
+function scoreToProfLevel(score) {
+  if (score >= 31) return 4;
+  if (score >= 16) return 3;
+  if (score >= 6)  return 2;
+  if (score >= 1)  return 1;
+  return 0;
+}
+
+// ── 漢堡選單 ────────────────────────────────────────────
+
+function openMenu() {
+  $('#menu-overlay').removeClass('hide');
+  $('#menu-drawer').addClass('open');
+}
+
+function closeMenu() {
+  $('#menu-drawer').removeClass('open');
+  $('#menu-overlay').addClass('hide');
+}
+
+$('#menu-btn').click(openMenu);
+$('#menu-close').click(closeMenu);
+$('#menu-overlay').click(closeMenu);
+
+// ── 頁面切換 ─────────────────────────────────────────────
+
+function showPage(name) {
+  closeMenu();
+  if (name === 'overview') {
+    renderOverview();
+    $('#overview-page').removeClass('hide');
+  } else if (name === 'about') {
+    $('#about-page').removeClass('hide');
+  } else {
+    $('#overview-page').addClass('hide');
+    $('#about-page').addClass('hide');
+  }
+}
+
+$('#goto-overview').click(function() { showPage('overview'); });
+$('#goto-about').click(function() { showPage('about'); });
+$('#overview-back').click(function() { showPage('quiz'); });
+$('#about-back').click(function() { showPage('quiz'); });
+
+// ── 總覽頁渲染 ────────────────────────────────────────────
+
+var currentFilter = 'all';
+
+function renderOverview() {
+  var data = getProfData();
+  var counts = [0, 0, 0, 0, 0];
+  var html = '';
+
+  for (var i = 0; i < moe700.length; i++) {
+    var q = moe700[i];
+    var score = data[q.no] || 0;
+    var level = scoreToProfLevel(score);
+    counts[level]++;
+    var displayWord = q.word.replace(/\(.*?\)/g, '');
+    var displayRead = q.read[0] || '';
+    html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '">'
+          + '<span class="chip-hanzi">' + displayWord + '</span>'
+          + '<span class="chip-read">' + displayRead + '</span>'
+          + '</button>';
+  }
+
+  $('#overview-grid').html(html);
+
+  var learned = counts[1] + counts[2] + counts[3] + counts[4];
+  $('#overview-stats-inline').text('已接觸 ' + learned + ' / 700');
+
+  $('.filter-btn[data-level="all"]').text('全部 700');
+  $('.filter-btn[data-level="0"]').text('未學 ' + counts[0]);
+  $('.filter-btn[data-level="1"]').text('接觸 ' + counts[1]);
+  $('.filter-btn[data-level="2"]').text('學習 ' + counts[2]);
+  $('.filter-btn[data-level="3"]').text('熟練 ' + counts[3]);
+  $('.filter-btn[data-level="4"]').text('精通 ' + counts[4]);
+
+  applyOverviewFilter();
+}
+
+function applyOverviewFilter() {
+  if (currentFilter === 'all') {
+    $('#overview-grid').removeAttr('data-filter');
+  } else {
+    $('#overview-grid').attr('data-filter', currentFilter);
+  }
+}
+
+$('#overview-filter').on('click', '.filter-btn', function() {
+  $('.filter-btn').removeClass('active');
+  $(this).addClass('active');
+  currentFilter = $(this).data('level') + '';
+  applyOverviewFilter();
+});
+
+// 點擊字卡 → 從那個詞開始練習
+$(document).on('click', '.word-chip', function() {
+  var no = parseInt($(this).data('no'));
+  practiceWord(no);
+});
+
+function practiceWord(no) {
+  var target = null;
+  var rest = [];
+  for (var i = 0; i < moe700.length; i++) {
+    if (moe700[i].no === no) target = moe700[i];
+    else rest.push(moe700[i]);
+  }
+  // 洗牌其餘詞彙
+  for (var i = 0; i < rest.length; i++) {
+    var j = Math.floor(Math.random() * rest.length);
+    var tmp = rest[i]; rest[i] = rest[j]; rest[j] = tmp;
+  }
+  ques = [target].concat(rest);
+  qi = 0;
+  onlyStarred = false;
+  $('#toggle-all').addClass('active');
+  $('#toggle-star').removeClass('active');
+  $('#pool-toggle').removeClass('right');
+  showPage('quiz');
+  nextQuestion();
+}
+
+// ── 練習主流程 ────────────────────────────────────────────
+
 function startMode() {
   ques = [];
   if (onlyStarred) {
@@ -649,6 +1188,8 @@ function showEmpty() {
   $('#listen-area').addClass('hide');
   $('#show').addClass('hide');
   $('#next').addClass('hide');
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
   $('#back').addClass('hide');
   $('#star').addClass('hide');
   $('#bottom-bar').addClass('hide');
@@ -663,6 +1204,8 @@ function nextQuestion() {
   $('#play-word-btn').removeClass('hide');
   $('#empty-kaomoji').addClass('hide');
   $('#star').removeClass('hide');
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
 
   var reads1 = '';
   for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
@@ -702,14 +1245,21 @@ function nextQuestion() {
   qi++;
 }
 
-function revealAnswer() {
+// skipAssess: 從「上一條」回去時，不顯示自評鈕
+function revealAnswer(skipAssess) {
   removeMasks();
   $('#show').addClass('hide');
-  $('#next').removeClass('hide');
   if (currentQ) revealHintWord(currentQ);
-  if ((answerMode === 'type') && (mode !== 'mean')) {
+  var isType = (answerMode === 'type') && (mode !== 'mean');
+  if (isType) {
     $('#listen-input').prop('disabled', true);
-    $('#show').prop('disabled', false); // reset for next question
+    $('#show').prop('disabled', false);
+    $('#next').removeClass('hide');
+  } else if (skipAssess) {
+    $('#next').removeClass('hide');
+  } else {
+    $('#knew-btn').removeClass('hide');
+    $('#unknown-btn').removeClass('hide');
   }
 }
 
@@ -729,6 +1279,8 @@ $('.mode-tab').click(function() {
     $('#answer-toggle').removeClass('hide');
   }
   if (!currentQ) { startMode(); return; }
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
   applyMask();
   refreshAnswerMode();
 });
@@ -753,6 +1305,8 @@ $('#toggle-star').click(function() {
 
 function refreshAnswerMode() {
   if (!currentQ) { startMode(); return; }
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
   var isType = (answerMode === 'type') && (mode !== 'mean');
   if (isType) {
     var ph = mode === 'word' ? '輸入漢字' : '輸入台羅';
@@ -805,17 +1359,28 @@ $('#show').click(function() {
       $('#listen-result').html(ok
         ? '<span class="result-correct">✓ 正確！</span>'
         : '<span class="result-wrong">✗ 毋著</span>');
+      if (ok && currentQ) addScore(currentQ.no, 3);
     }
   }
-  revealAnswer();
+  revealAnswer(false);
 });
 
 $('#next').click(function() { nextQuestion(); });
 
+// 自評按鈕
+$('#knew-btn').click(function() {
+  if (currentQ) addScore(currentQ.no, 2);
+  nextQuestion();
+});
+$('#unknown-btn').click(function() {
+  if (currentQ) addScore(currentQ.no, 1);
+  nextQuestion();
+});
+
 $('#back').click(function() {
   qi -= 2;
   nextQuestion();
-  if (answerMode !== 'type') revealAnswer();
+  if (answerMode !== 'type') revealAnswer(true);
 });
 
 $('#listen-input').on('input', function() {
