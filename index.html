@@ -53,6 +53,8 @@ div, span { margin: 0 }
 .hint-item { display: inline }
 .hint-play { background: none; border: none; cursor: pointer; font-size: 0.75em; vertical-align: middle; opacity: 0.6; padding: 0 2px }
 .hint-play:hover { opacity: 1 }
+.blank { color: #bbb; letter-spacing: -0.1em }
+.hint-word { color: #c0392b; font-family: GenYoExt }
 
 /* listen mode */
 #listen-area { margin: 10px auto; max-width: 420px }
@@ -81,11 +83,11 @@ div, span { margin: 0 }
 
 <div id="head">
     欲考啥物：<select id="mode">
-        <option value="word">推薦用字</option>
-        <option value="read">讀音</option>
+        <option value="word">漢字</option>
+        <option value="read">台羅</option>
         <option value="mean">華語解釋</option>
-        <option value="starword">生份的推薦用字</option>
-        <option value="starread">生份的讀音</option>
+        <option value="starword">生份的漢字</option>
+        <option value="starread">生份的台羅</option>
         <option value="starmean">生份的華語解釋</option>
         <option value="listen">聽音辨字</option>
         <option value="starlisten">生份的聽音辨字</option>
@@ -186,12 +188,19 @@ function toHintSpans(q) {
     var res = '';
     for (var i = 0; i < parts.length; i++) {
         var src = sampleAudioSrc(q, parts[i]);
+        var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
         res += '<span class="hint-item">'
-             + '<span class="hint-text">' + parts[i] + (i < parts.length - 1 ? '、' : '') + '</span>'
+             + '<span class="hint-text">' + display + (i < parts.length - 1 ? '、' : '') + '</span>'
              + '<button class="hint-play" data-src="' + src + '">🔊</button>'
              + '</span>';
     }
     return res;
+}
+
+function revealHintWord(q) {
+    $('#hint .blank').each(function() {
+        $(this).replaceWith('<span class="hint-word">' + q.word + '</span>');
+    });
 }
 
 // ── Event bindings ───────────────────────────────────────
@@ -218,6 +227,7 @@ $('#show').click(function() {
     $('#showhint').hide();
     $('#show').hide();
     $('#next').show();
+    if (currentQ) revealHintWord(currentQ);
     if (mode === 'listen') {
         $('#word-row').show();
         $('#read').show();
