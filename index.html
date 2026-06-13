@@ -634,6 +634,7 @@ function showEmpty() {
   $('#next').addClass('hide');
   $('#back').addClass('hide');
   $('#star').addClass('hide');
+  $('#bottom-bar').addClass('hide');
   currentQ = null;
 }
 
@@ -641,6 +642,7 @@ function nextQuestion() {
   if (qi >= ques.length) { startMode(); return; }
   var q = ques[qi];
   currentQ = q;
+  $('#bottom-bar').removeClass('hide');
   $('#play-word-btn').removeClass('hide');
   $('#empty-kaomoji').addClass('hide');
   $('#star').removeClass('hide');
