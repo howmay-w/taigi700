@@ -3,10 +3,14 @@
 <head>
 <title>教育部700建議用字練習</title>
 <meta charset="utf-8">
-<meta name="theme-color" content="#f0511d">
+<meta name="theme-color" content="#111844">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Huninn&display=swap" rel="stylesheet">
@@ -372,6 +376,27 @@ body {
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0) }
 
 .hide { display: none !important }
+
+@media (max-height: 700px) {
+  #header { padding: 8px 12px 8px; padding-top: calc(8px + env(safe-area-inset-top)); }
+  #mode-tabs { margin-bottom: 6px; }
+  .mode-tab { padding: 7px 2px; font-size: 13px; }
+  .tgl { padding: 4px 0; font-size: 13px; }
+  #main { padding: 12px 16px 0; }
+  #card { padding: 14px 16px 16px; gap: 10px; }
+  #word { font-size: 48px; }
+  #read { min-height: 44px; }
+  #read1 { font-size: 34px; }
+  #read2 { font-size: 18px; min-height: calc(18px * 1.4); }
+  #mean { font-size: 18px; min-height: 36px; }
+  #hint { font-size: 18px; line-height: 2; }
+  #hint-area { min-height: 40px; }
+  #listen-area { margin-top: 6px; }
+  #listen-card { padding: 14px 16px 12px; }
+  #listen-input { font-size: 19px; }
+  #bottom-bar { padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+  #bottom-bar > button { height: 42px; }
+}
 </style>
 </head>
 <body>

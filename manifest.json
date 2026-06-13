@@ -1,0 +1,32 @@
+{
+  "name": "教育部700台語練習",
+  "short_name": "台語700",
+  "description": "教育部700建議用字台語練習",
+  "start_url": "/taigi700/",
+  "scope": "/taigi700/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EAE0CF",
+  "theme_color": "#111844",
+  "lang": "zh-TW",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
