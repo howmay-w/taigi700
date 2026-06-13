@@ -15,18 +15,38 @@
   font-family: NunitoPOJ;
   src: url(NunitoPOJ-Regular.ttf) format('truetype');
 }
+
+/* ── 色彩 tokens ──────────────────────────────────────────
+   品牌原色
+   --navy   #111844  深底色、文字
+   --blue   #4B5694  主要強調、active 狀態
+   --slate  #7288AE  次要、灰階文字
+   --beige  #EAE0CF  頁面背景
+   --amber  #FAB95B  星星、暖色高亮
+   --stone  #E8E2DB  卡片表面、邊框
+   ──────────────────────────────────────────────────────── */
+:root {
+  --navy:  #111844;
+  --blue:  #4B5694;
+  --slate: #7288AE;
+  --beige: #EAE0CF;
+  --amber: #FAB95B;
+  --stone: #E8E2DB;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 
 body {
-  background: #fcede8;
+  background: var(--beige);
   font-family: 'Huninn', sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
 }
 
+/* ── Header ─────────────────────────────────────────── */
 #header {
-  background: #1a1a1a;
+  background: var(--navy);
   padding: 12px 12px 10px;
   padding-top: calc(12px + env(safe-area-inset-top));
   flex-shrink: 0;
@@ -44,12 +64,12 @@ body {
   padding: 9px 2px;
   border: none;
   border-radius: 8px;
-  background: #333;
-  color: #888;
+  background: rgba(255,255,255,0.08);
+  color: var(--slate);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
-.mode-tab.active { background: #f0511d; color: #fff }
+.mode-tab.active { background: var(--blue); color: #fff }
 
 #mode-toggles {
   display: flex;
@@ -59,7 +79,7 @@ body {
   flex: 1;
   position: relative;
   display: flex;
-  background: #2e2e2e;
+  background: rgba(255,255,255,0.08);
   border-radius: 20px;
   padding: 3px;
   overflow: hidden;
@@ -73,7 +93,7 @@ body {
   padding: 6px 0;
   border: none;
   background: transparent;
-  color: #888;
+  color: var(--slate);
   cursor: pointer;
   transition: color 0.25s;
   display: inline-flex;
@@ -90,10 +110,11 @@ body {
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
-#pool-toggle   .tgl-indicator { background: #2a8a5e }
-#answer-toggle .tgl-indicator { background: #1e6e9f }
+#pool-toggle   .tgl-indicator { background: var(--blue) }
+#answer-toggle .tgl-indicator { background: var(--slate) }
 .tgl-group.right .tgl-indicator { transform: translateX(100%) }
 
+/* ── Main ────────────────────────────────────────────── */
 #main {
   flex: 1;
   display: flex;
@@ -106,10 +127,10 @@ body {
 #card {
   width: 100%;
   max-width: 480px;
-  background: #fff9f7;
+  background: #fff;
   border-radius: 18px;
   padding: 20px 20px 24px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 16px rgba(17,24,68,0.10);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -118,24 +139,25 @@ body {
 
 #no {
   font-size: 13px;
-  color: #c0b0ab;
+  color: var(--slate);
   align-self: flex-start;
 }
 
 #word {
   font-family: 'Iansui', sans-serif;
   font-size: 64px;
-  color: #521b0b;
+  color: var(--navy);
   line-height: 1.2;
   text-align: center;
   border-radius: 12px;
   padding: 4px 16px;
   min-width: 160px;
+  margin-bottom: -8px;
 }
 
 #read {
   font-family: NunitoPOJ, 'Iansui', sans-serif;
-  color: #184178;
+  color: var(--blue);
   text-align: center;
   border-radius: 12px;
   padding: 4px 16px;
@@ -144,7 +166,7 @@ body {
 }
 #read1 { font-family: NunitoPOJ, sans-serif; font-size: 44px; line-height: 1.3 }
 #read1 span { display: block }
-#read2 { font-family: NunitoPOJ, sans-serif; font-size: 22px; color: #4a6fa8; margin-top: 2px; min-height: calc(22px * 1.4) }
+#read2 { font-family: NunitoPOJ, sans-serif; font-size: 22px; color: var(--slate); margin-top: 2px; min-height: calc(22px * 1.4) }
 #read2 span { white-space: nowrap }
 
 .play-btn {
@@ -152,8 +174,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  background: #e8d4ce;
-  color: #6b2a1a;
+  background: var(--stone);
+  color: var(--navy);
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
@@ -163,14 +185,14 @@ body {
   opacity: 0.9;
   transition: opacity 0.12s, background 0.12s;
 }
-.play-btn:hover { opacity: 1; background: #ddc4bc }
+.play-btn:hover { opacity: 1; background: var(--beige) }
 .play-btn svg { flex-shrink: 0 }
 
 #mean {
   font-family: 'Huninn', sans-serif;
   font-size: 22px;
   line-height: 1.5;
-  color: #333;
+  color: var(--navy);
   text-align: center;
   border-radius: 12px;
   padding: 4px 16px;
@@ -181,7 +203,7 @@ body {
 
 .masked {
   color: transparent !important;
-  background: #ddd !important;
+  background: var(--stone) !important;
   border-radius: 12px;
   user-select: none;
   pointer-events: none;
@@ -193,27 +215,27 @@ body {
 #hint {
   font-family: 'Iansui', sans-serif;
   font-size: 22px;
-  color: #19451b;
+  color: var(--navy);
   line-height: 2.4;
   text-align: center;
 }
 .hint-item { display: inline-block; white-space: nowrap; }
 .hint-sep { display: inline; white-space: normal; margin: 0 1px; }
-.blank { color: #ccc }
-.hint-word { color: #c0392b; font-family: 'Iansui', sans-serif }
+.blank { color: var(--slate) }
+.hint-word { color: var(--blue); font-family: 'Iansui', sans-serif }
 .hint-play {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ddeedd;
-  color: #19451b;
+  background: var(--stone);
+  color: var(--navy);
   border: none;
   border-radius: 8px;
-  padding: 5px 11px;
+  padding: 7px 8px;
   cursor: pointer;
   font-size: 12px;
-  vertical-align: middle;
-  margin: 0 2px;
+  vertical-align: text-top;
+  margin-left: 5px;
   line-height: 1;
   opacity: 0.85;
 }
@@ -221,60 +243,73 @@ body {
 
 #listen-area {
   width: 100%;
+  max-width: 480px;
+  margin-top: 8px;
+}
+#listen-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 2px 16px rgba(17,24,68,0.10);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 0;
 }
 #listen-input {
   font-family: 'Iansui', sans-serif;
   font-size: 22px;
   width: 90%;
-  padding: 10px;
-  border: 2px solid #c0876e;
-  border-radius: 10px;
+  padding: 8px 4px;
+  border: none;
+  border-bottom: 2px solid var(--slate);
+  border-radius: 0;
   text-align: center;
-  background: #fff;
+  background: transparent;
   outline: none;
 }
-#listen-input:focus { border-color: #f0511d }
-#listen-input:disabled { background: #f5f5f5; color: #999 }
-#listen-result { font-size: 36px; font-weight: bold; }
-.result-correct { color: #1a7a1a }
-.result-wrong   { color: #cc1111 }
+#listen-input:focus { border-bottom-color: var(--blue) }
+#listen-input:disabled { color: var(--slate) }
+#listen-result { font-size: 20px; font-weight: bold; margin-top: 6px; }
+.result-correct { color: #8EB486 }
+.result-wrong   { color: #FF6060 }
 
+/* ── 底部操作列 ───────────────────────────────────────── */
 #bottom-bar {
   position: sticky;
   bottom: 0;
   left: 0; right: 0;
   background: #fff;
-  border-top: 1px solid #ead8d2;
+  border-top: 1px solid var(--stone);
   display: flex;
-  align-items: stretch;
+  align-items: center;
   padding: 12px 12px calc(28px + env(safe-area-inset-bottom));
   gap: 8px;
   flex-shrink: 0;
   margin-top: 16px;
 }
+#bottom-bar > button { height: 48px; }
 
 #back {
   font-family: 'Huninn', sans-serif;
   font-size: 18px;
-  background: #f0ebe9;
+  background: var(--stone);
   border: none;
   border-radius: 10px;
   padding: 11px 14px;
   cursor: pointer;
-  color: #666;
+  color: var(--navy);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-#back:hover { background: #e5dcd9 }
+#back:hover { background: var(--beige) }
 
 #star {
-  background: #f0ebe9;
+  background: var(--stone);
   border: none;
   border-radius: 10px;
   padding: 11px 14px;
@@ -285,43 +320,44 @@ body {
   justify-content: center;
   transition: background 0.15s;
 }
-#star:hover { background: #e5dcd9 }
-#star .star-icon { fill: #bbb; transition: fill 0.2s }
-#star.starred { background: #fff3e0 }
-#star.starred .star-icon { fill: #f5a000 }
+#star:hover { background: var(--beige) }
+#star .star-icon { fill: var(--slate); transition: fill 0.2s }
+#star.starred { background: #fdf3e0 }
+#star.starred .star-icon { fill: var(--amber) }
 
 #show {
   flex: 1;
   font-family: 'Huninn', sans-serif;
   font-size: 20px;
   padding: 11px;
-  background: #f0511d;
+  background: var(--blue);
   color: #fff;
   border: none;
   border-radius: 10px;
   cursor: pointer;
 }
-#show:hover { background: #d9471a }
+#show:hover { background: var(--navy) }
+#show:disabled { background: var(--stone); color: var(--slate); cursor: default; }
 
 #next {
   flex: 1;
   font-family: 'Huninn', sans-serif;
   font-size: 20px;
   padding: 11px;
-  background: #2a2a2a;
+  background: var(--navy);
   color: #fff;
   border: none;
   border-radius: 10px;
   cursor: pointer;
 }
-#next:hover { background: #111 }
+#next:hover { background: #060c22 }
 
 .toast {
   position: fixed;
   bottom: 110px;
   left: 50%;
   transform: translateX(-50%) translateY(12px);
-  background: rgba(0,0,0,0.78);
+  background: rgba(17,24,68,0.88);
   color: #fff;
   font-family: 'Huninn', sans-serif;
   font-size: 15px;
@@ -354,7 +390,7 @@ body {
     </div>
     <div class="tgl-group" id="answer-toggle">
       <button class="tgl active" id="toggle-show">顯示</button>
-      <button class="tgl" id="toggle-type">打字</button>
+      <button class="tgl" id="toggle-type">拍字</button>
       <div class="tgl-indicator"></div>
     </div>
   </div>
@@ -379,7 +415,10 @@ body {
     <div id="hint-area">
       <div id="hint"></div>
     </div>
-    <div id="listen-area" class="hide">
+  </div>
+
+  <div id="listen-area" class="hide">
+    <div id="listen-card">
       <input id="listen-input" type="text" autocomplete="off" autocorrect="off"
              autocapitalize="none" spellcheck="false" placeholder="輸入答案…">
       <div id="listen-result"></div>
@@ -395,7 +434,7 @@ body {
     </svg>
   </button>
   <button id="show">對答案</button>
-  <button id="next" class="hide">後一題</button>
+  <button id="next" class="hide">後一條</button>
 </div>
 
 <audio id="player"></audio>
@@ -429,17 +468,65 @@ function sampleAudioSrc(q, rawItem) {
   return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, q.word) + '.mp3';
 }
 
-function normalizeRoman(str) {
-  return str.trim().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/-/g, '').toLowerCase();
+// 聲調符號 → 數字對應表
+var TONE_DIA = {
+  '́': 2, // á  acute
+  '̀': 3, // à  grave
+  '̂': 5, // â  circumflex
+  '̌': 6, // ǎ  caron
+  '̄': 7, // ā  macron
+  '̍': 8, // a̍  vertical line above（第八調，U+030D）
+  '̋': 9, // a̋  double acute
+};
+
+// 將單一音節（允許含聲調符號或尾數字）轉為 base+數字 形式
+// 例：bô → bo5  kah → kah4  tsang9 → tsang9  a → a1
+function syllableToNumbered(syl) {
+  syl = syl.trim().toLowerCase();
+  if (!syl) return '';
+
+  // 已經有數字調號（字母後接單一數字）
+  var numMatch = syl.match(/^([a-zÀ-ɏ]+)([1-9])$/i);
+  if (numMatch) {
+    // 去掉字母部分的聲調符號（使用者可能混用）
+    var base = numMatch[1].normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return base + numMatch[2];
+  }
+
+  // 含聲調符號 → 掃描 NFD 找 combining char
+  var nfd = syl.normalize('NFD');
+  var tone = 0;
+  var base = '';
+  for (var i = 0; i < nfd.length; i++) {
+    var t = TONE_DIA[nfd[i]];
+    if (t !== undefined) {
+      tone = t;
+    } else {
+      base += nfd[i];
+    }
+  }
+  // 無聲調符號：結尾 p/t/k/h 為第四調，否則第一調
+  if (tone === 0) tone = /[ptkh]$/.test(base) ? 4 : 1;
+  return base + tone;
+}
+
+// 將完整讀音字串（含 - 分隔）轉為 numbered form 陣列
+function readToNumbered(str) {
+  return str.trim().split(/[\s-]+/).map(syllableToNumbered);
 }
 
 function checkAnswer(q, input) {
   if (mode === 'word') return input.trim() === q.word;
-  if (input.trim() === q.word) return true;
-  var norm = normalizeRoman(input);
+
+  // 台羅模式：必須調號正確（符號或數字皆可）
+  // 多音節必須有空格或 - 分隔
+  var inputParts = input.trim().split(/[\s-]+/).map(syllableToNumbered);
+  var inputKey = inputParts.join('-');
+
   var reads = (q.read || []).concat(q.read2 || []);
   for (var i = 0; i < reads.length; i++) {
-    if (normalizeRoman(reads[i]) === norm) return true;
+    var readParts = readToNumbered(reads[i]);
+    if (readParts.join('-') === inputKey) return true;
   }
   return false;
 }
@@ -552,7 +639,7 @@ function nextQuestion() {
     $('#listen-input').attr('placeholder', ph).val('').prop('disabled', false);
     $('#listen-result').html('');
     $('#listen-area').removeClass('hide');
-    $('#show').text('確認答案');
+    $('#show').text('確認答案').prop('disabled', true);
     setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
   } else {
     $('#listen-area').addClass('hide');
@@ -576,6 +663,7 @@ function revealAnswer() {
   if (currentQ) revealHintWord(currentQ);
   if ((answerMode === 'type') && (mode !== 'mean')) {
     $('#listen-input').prop('disabled', true);
+    $('#show').prop('disabled', false); // reset for next question
   }
 }
 
@@ -661,8 +749,11 @@ $('#back').click(function() {
   if (answerMode !== 'type') revealAnswer();
 });
 
+$('#listen-input').on('input', function() {
+  $('#show').prop('disabled', $(this).val().trim() === '');
+});
 $('#listen-input').on('keydown', function(e) {
-  if (e.key === 'Enter') $('#show').click();
+  if (e.key === 'Enter' && !$('#show').prop('disabled')) $('#show').click();
 });
 
 $('#star').click(function() {
