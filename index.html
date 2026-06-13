@@ -749,7 +749,7 @@ body {
 }
 .chip-read {
   font-family: NunitoPOJ, sans-serif;
-  font-size: 8px;
+  font-size: 10px;
   line-height: 1.2;
   overflow: hidden;
   max-width: 100%;
@@ -1386,8 +1386,8 @@ function renderOverview() {
     var score = data[q.no] || 0;
     var level = scoreToProfLevel(score);
     counts[level]++;
-    var displayWord = q.word.replace(/\(.*?\)/g, '');
-    var displayRead = q.read[0] || '';
+    var displayWord = q.word.replace(/\(.*?\)/g, '').trim();
+    var displayRead = (q.read[0] || '').replace(/\(.*?\)/g, '').trim();
     html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '">'
           + '<span class="chip-hanzi">' + displayWord + '</span>'
           + '<span class="chip-read">' + displayRead + '</span>'
