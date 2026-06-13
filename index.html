@@ -1800,7 +1800,7 @@ function renderOverview() {
     var visLen = displayRead.normalize('NFD').replace(/[̀-ͯ]/g, '').length;
     var desktop = window.innerWidth >= 640;
     var readSize = desktop
-      ? (visLen <= 4 ? '22px' : visLen <= 7 ? '20px' : visLen <= 10 ? '18px' : '16px')
+      ? '20px'
       : (visLen <= 4 ? '11px' : visLen <= 7 ? '10px' : visLen <= 10 ? '9px' : '8px');
     html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '"'
           + (starred ? ' data-starred="1"' : '') + '>'
