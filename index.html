@@ -2127,7 +2127,28 @@ $('#toggle-all').click(function() {
   $('#toggle-all').addClass('active');
   $('#toggle-star').removeClass('active');
   $('#pool-toggle').removeClass('right');
-  startMode();
+
+  // 重建完整牌池（依熟練度排序），但保留當前字詞不切換
+  var pool = [];
+  for (var i in moe700) pool.push(moe700[i]);
+  var data = getProfData();
+  var groups = [[], [], [], [], []];
+  for (var i = 0; i < pool.length; i++) {
+    var level = scoreToProfLevel(data[pool[i].no] || 0);
+    groups[level].push(pool[i]);
+  }
+  ques = shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
+    .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
+
+  if (currentQ) {
+    ques = ques.filter(function(q) { return q.no !== currentQ.no; });
+    ques.unshift(currentQ);
+    qi = 1;
+    $('#back').addClass('hide');
+  } else {
+    qi = 0;
+    nextQuestion();
+  }
 });
 
 $('#toggle-star').click(function() {
