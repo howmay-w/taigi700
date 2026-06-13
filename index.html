@@ -180,18 +180,18 @@ body {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  background: var(--stone);
-  color: var(--navy);
+  background: var(--slate);
+  color: #fff;
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
   cursor: pointer;
   font-family: 'Huninn', sans-serif;
   font-size: 14px;
-  opacity: 0.9;
+  opacity: 0.85;
   transition: opacity 0.12s, background 0.12s;
 }
-.play-btn:hover { opacity: 1; background: var(--beige) }
+.play-btn:hover { opacity: 1; background: var(--blue) }
 .play-btn svg { flex-shrink: 0 }
 
 #mean {
@@ -233,8 +233,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--stone);
-  color: var(--navy);
+  background: var(--slate);
+  color: #fff;
   border: none;
   border-radius: 8px;
   padding: 7px 8px;
@@ -454,7 +454,7 @@ body {
 </div>
 
 <div id="bottom-bar">
-  <button id="back">⬅</button>
+  <button id="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
   <button id="star">
     <svg class="star-icon" viewBox="0 0 24 24" width="22" height="22">
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -642,7 +642,7 @@ function showEmpty() {
   $('#read1').html('Bô mi̍h-kiānn');
   $('#read2').html('');
   $('#read').removeClass('masked');
-  $('#mean').html('<span>若拄著記袂牢的詞，</span><br><span>會使揤 <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:-3px;fill:#bbb"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> 共加入來。</span>').removeClass('masked');
+  $('#mean').html('<span>若拄著記袂牢的詞，</span><br><span>會使揤 <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:-3px;fill:var(--slate)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> 共加入來。</span>').removeClass('masked');
   $('#hint').html('');
   $('#play-word-btn').addClass('hide');
   $('#empty-kaomoji').removeClass('hide');
