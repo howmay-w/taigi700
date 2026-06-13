@@ -9,7 +9,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1032,6 +1033,78 @@ strong, b { font-weight: normal; }
 .settings-action-btn.danger svg { color: #d94040; }
 .settings-action-btn.danger:hover { background: #fff0f0; }
 
+/* ── iOS 安裝引導 modal ──────────────────────────────── */
+#ios-install-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 calc(16px + env(safe-area-inset-bottom));
+}
+#ios-install-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+#ios-install-dialog {
+  position: relative;
+  background: #fff;
+  border-radius: 20px 20px 16px 16px;
+  padding: 24px 24px 20px;
+  max-width: 380px;
+  width: calc(100% - 32px);
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.15);
+}
+#ios-install-dialog h3 {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+.ios-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-family: 'Huninn', sans-serif;
+  font-size: 14.5px;
+  color: #555;
+  line-height: 1.5;
+}
+.ios-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.ios-share-icon {
+  display: inline-block;
+  vertical-align: -3px;
+  margin: 0 2px;
+}
+#ios-install-close {
+  margin-top: 16px;
+  width: 100%;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  padding: 12px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#ios-install-close:hover { background: var(--navy); }
+
 /* ── 匯入確認 modal ───────────────────────────────────── */
 #import-modal {
   position: fixed;
@@ -1382,6 +1455,18 @@ strong, b { font-weight: normal; }
   </div>
   <div class="page-body">
     <div id="settings-content">
+      <div class="settings-section hide" id="install-section">
+        <div class="settings-section-title">安裝</div>
+        <div class="settings-action-list">
+          <button class="settings-action-btn" id="install-pwa-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v13M8 11l4 4 4-4"/>
+              <path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/>
+            </svg>
+            加入主畫面
+          </button>
+        </div>
+      </div>
       <div class="settings-section">
         <div class="settings-section-title">偏好設定</div>
         <div class="settings-row">
@@ -1426,6 +1511,33 @@ strong, b { font-weight: normal; }
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- iOS 安裝引導 modal -->
+<div id="ios-install-modal" class="hide">
+  <div id="ios-install-overlay"></div>
+  <div id="ios-install-dialog">
+    <h3>加入主畫面</h3>
+    <div class="ios-step">
+      <div class="ios-step-num">1</div>
+      <span>點擊 Safari 下方的分享按鈕
+        <svg class="ios-share-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+      </span>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-num">2</div>
+      <span>選擇「加入主畫面」</span>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-num">3</div>
+      <span>點擊右上角「加入」確認</span>
+    </div>
+    <button id="ios-install-close">了解</button>
   </div>
 </div>
 
@@ -2168,6 +2280,45 @@ function setMarked(no, val) {
   if (val) marks = (marks && marks !== '&' ? marks : '&') + no + '&';
   localStorage.setItem(MARKS_KEY, marks);
 }
+
+// ── 加入主畫面 / PWA 安裝 ────────────────────────────────
+
+var deferredInstallPrompt = null;
+var isIOS = /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase());
+var isStandalone = (navigator.standalone === true) || window.matchMedia('(display-mode: standalone)').matches;
+
+if (!isStandalone) {
+  if (isIOS) $('#install-section').removeClass('hide');
+}
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (!isStandalone) $('#install-section').removeClass('hide');
+});
+
+window.addEventListener('appinstalled', function() {
+  deferredInstallPrompt = null;
+  $('#install-section').addClass('hide');
+});
+
+$('#install-pwa-btn').click(function() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(function(result) {
+      if (result.outcome === 'accepted') {
+        deferredInstallPrompt = null;
+        $('#install-section').addClass('hide');
+      }
+    });
+  } else if (isIOS) {
+    $('#ios-install-modal').removeClass('hide');
+  }
+});
+
+$('#ios-install-overlay, #ios-install-close').click(function() {
+  $('#ios-install-modal').addClass('hide');
+});
 
 startMode();
 
