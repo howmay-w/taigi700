@@ -465,7 +465,8 @@ function wordAudioSrc(q) {
 }
 
 function sampleAudioSrc(q, rawItem) {
-  return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, q.word) + '.mp3';
+  var wordBase = q.word.replace(/\(.*?\)/g, '');
+  return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, wordBase) + '.mp3';
 }
 
 // 聲調符號 → 數字對應表
