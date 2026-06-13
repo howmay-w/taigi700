@@ -530,7 +530,7 @@ function startMode() {
   ques = [];
 
   if (onlyStarred) {
-    var marklist = getMarks(mode);
+    var marklist = getMarks();
     if (!marklist || marklist.length === 0) {
       showEmpty(); return;
     }
@@ -550,17 +550,18 @@ function startMode() {
 
 function showEmpty() {
   $('#no').text('');
-  $('#word').text('生份的詞').removeClass('masked');
-  $('#read1').html('Bô mi̍h-kiānn');
+  $('#word').text('Bô mi̍h-kiānn').removeClass('masked');
+  $('#read1').html('');
   $('#read2').html('');
-  $('#read').removeClass('masked');
-  $('#mean').html('<span>尚未標記生份的詞。</span>').removeClass('masked');
-  $('#hint').html('').hide();
-  $('#showhint').hide();
+  $('#read').addClass('masked');
+  $('#mean').html('<span>尚未標記生份的詞。</span><span>作答時按 ⭐ 加入。</span>').removeClass('masked');
+  $('#hint').html('');
+  $('#showhint').addClass('hide');
   $('#listen-area').addClass('hide');
-  $('#show').hide();
+  $('#show').addClass('hide');
   $('#next').addClass('hide');
-  $('#back').hide();
+  $('#back').addClass('hide');
+  currentQ = null;
 }
 
 function nextQuestion() {
@@ -580,8 +581,8 @@ function nextQuestion() {
   $('#read1').html(reads1);
   $('#read2').html(reads2);
   $('#mean').html(q.mean.split(/、/).map(function(s){ return '<span>' + s + '</span>'; }).join('、'));
-  $('#hint').html(toHintSpans(q)).hide();
-  $('#showhint').show();
+  $('#hint').html(toHintSpans(q)).addClass('hide');
+  $('#showhint').removeClass('hide');
 
   // Apply masks (layout stays fixed)
   applyMask();
@@ -601,11 +602,11 @@ function nextQuestion() {
 
   // Star state
   $('#star').removeClass('starred').text('⭐');
-  if (isMarked(mode, q.no)) $('#star').addClass('starred').text('★');
+  if (isMarked(q.no)) $('#star').addClass('starred').text('★');
 
   $('#show').removeClass('hide');
   $('#next').addClass('hide');
-  if (qi >= 1) $('#back').show(); else $('#back').hide();
+  if (qi >= 1) $('#back').removeClass('hide'); else $('#back').addClass('hide');
 
   qi++;
 }
@@ -613,8 +614,8 @@ function nextQuestion() {
 // ── Reveal answer ────────────────────────────────────
 function revealAnswer() {
   removeMasks();
-  $('#hint').show();
-  $('#showhint').hide();
+  $('#hint').removeClass('hide');
+  $('#showhint').addClass('hide');
   $('#show').addClass('hide');
   $('#next').removeClass('hide');
   if (currentQ) revealHintWord(currentQ);
@@ -657,8 +658,8 @@ $(document).on('click', '.hint-play', function() {
 });
 
 $('#showhint').click(function() {
-  $('#hint').show();
-  $(this).hide();
+  $('#hint').removeClass('hide');
+  $(this).addClass('hide');
 });
 
 $('#show').click(function() { revealAnswer(); });
@@ -690,32 +691,34 @@ $('#star').click(function() {
   if (!no) return;
   var wasStarred = $(this).hasClass('starred');
   if (wasStarred) {
-    setMarked(mode, no, false);
+    setMarked(no, false);
     $(this).removeClass('starred').text('⭐');
   } else {
-    setMarked(mode, no, true);
+    setMarked(no, true);
     $(this).addClass('starred').text('★');
     showToast('已加入生份的詞 ⭐');
   }
 });
 
-// ── localStorage ──────────────────────────────────────
-function isMarked(mode, no) {
-  var marks = localStorage.getItem('taigi700_' + mode);
+// ── localStorage（星星跨模式共用） ────────────────────────
+var MARKS_KEY = 'taigi700_starred';
+
+function isMarked(no) {
+  var marks = localStorage.getItem(MARKS_KEY);
   return !!(marks && marks.match('&' + no + '&'));
 }
 
-function getMarks(mode) {
-  var marks = localStorage.getItem('taigi700_' + mode);
+function getMarks() {
+  var marks = localStorage.getItem(MARKS_KEY);
   if (!marks || marks === '&') return null;
   return marks.replace(/^\&|\&$/g, '').split('&');
 }
 
-function setMarked(mode, no, val) {
-  var marks = localStorage.getItem('taigi700_' + mode) || '';
+function setMarked(no, val) {
+  var marks = localStorage.getItem(MARKS_KEY) || '';
   marks = marks.replace('&' + no + '&', '&').replace(/\&+/g, '&');
   if (val) marks = (marks && marks !== '&' ? marks : '&') + no + '&';
-  localStorage.setItem('taigi700_' + mode, marks);
+  localStorage.setItem(MARKS_KEY, marks);
 }
 
 // ── Init ──────────────────────────────────────────────
