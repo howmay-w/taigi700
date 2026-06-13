@@ -15,7 +15,6 @@
   font-family: NunitoPOJ;
   src: url(NunitoPOJ-Regular.ttf) format('truetype');
 }
-/* ── Reset ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 
 body {
@@ -26,7 +25,6 @@ body {
   min-height: 100dvh;
 }
 
-/* ── Header ─────────────────────────────────────────── */
 #header {
   background: #1a1a1a;
   padding: 12px 12px 10px;
@@ -43,7 +41,7 @@ body {
   flex: 1;
   font-family: 'Huninn', sans-serif;
   font-size: 14px;
-  padding: 8px 2px;
+  padding: 9px 2px;
   border: none;
   border-radius: 8px;
   background: #333;
@@ -53,28 +51,49 @@ body {
 }
 .mode-tab.active { background: #f0511d; color: #fff }
 
-#mode-toggle, #mode-answer-row {
+#mode-toggles {
   display: flex;
-  gap: 0;
+  gap: 8px;
+}
+.tgl-group {
+  flex: 1;
+  position: relative;
+  display: flex;
   background: #2e2e2e;
   border-radius: 20px;
   padding: 3px;
+  overflow: hidden;
 }
-.toggle-btn {
+.tgl {
   flex: 1;
+  position: relative;
+  z-index: 1;
   font-family: 'Huninn', sans-serif;
   font-size: 14px;
-  padding: 5px 0;
+  padding: 6px 0;
   border: none;
-  border-radius: 17px;
   background: transparent;
   color: #888;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.25s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
-.toggle-btn.active { background: #f0511d; color: #fff }
+.tgl.active { color: #fff }
+.tgl-indicator {
+  position: absolute;
+  top: 3px; bottom: 3px; left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 17px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+#pool-toggle   .tgl-indicator { background: #2a8a5e }
+#answer-toggle .tgl-indicator { background: #1e6e9f }
+.tgl-group.right .tgl-indicator { transform: translateX(100%) }
 
-/* ── Main ────────────────────────────────────────────── */
 #main {
   flex: 1;
   display: flex;
@@ -84,7 +103,6 @@ body {
   overflow-y: auto;
 }
 
-/* ── Card ────────────────────────────────────────────── */
 #card {
   width: 100%;
   max-width: 480px;
@@ -104,7 +122,6 @@ body {
   align-self: flex-start;
 }
 
-/* 台語漢字 */
 #word {
   font-family: 'Iansui', sans-serif;
   font-size: 64px;
@@ -114,10 +131,22 @@ body {
   border-radius: 12px;
   padding: 4px 16px;
   min-width: 160px;
-  transition: color 0.2s, background 0.2s;
 }
 
-/* 播音按鈕 */
+#read {
+  font-family: NunitoPOJ, 'Iansui', sans-serif;
+  color: #184178;
+  text-align: center;
+  border-radius: 12px;
+  padding: 4px 16px;
+  min-width: 160px;
+  min-height: 60px;
+}
+#read1 { font-family: NunitoPOJ, sans-serif; font-size: 44px; line-height: 1.3 }
+#read1 span { display: block }
+#read2 { font-family: NunitoPOJ, sans-serif; font-size: 22px; color: #4a6fa8; margin-top: 2px; min-height: calc(22px * 1.4) }
+#read2 span { white-space: nowrap }
+
 .play-btn {
   display: inline-flex;
   align-items: center;
@@ -137,37 +166,19 @@ body {
 .play-btn:hover { opacity: 1; background: #ddc4bc }
 .play-btn svg { flex-shrink: 0 }
 
-/* 台羅 — 用 NunitoPOJ 確保第八調點符正確顯示 */
-#read {
-  font-family: NunitoPOJ, 'Iansui', sans-serif;
-  color: #184178;
-  text-align: center;
-  border-radius: 12px;
-  padding: 4px 16px;
-  min-width: 160px;
-  min-height: 60px;
-  transition: color 0.2s, background 0.2s;
-}
-#read1 { font-family: NunitoPOJ, sans-serif; font-size: 44px; line-height: 1.3 }
-#read1 span { display: block }
-#read2 { font-family: NunitoPOJ, sans-serif; font-size: 22px; color: #4a6fa8; margin-top: 6px }
-#read2 span { white-space: nowrap }
-
-/* 華語解釋 */
 #mean {
   font-family: 'Huninn', sans-serif;
-  font-size: 28px;
+  font-size: 22px;
+  line-height: 1.5;
   color: #333;
   text-align: center;
   border-radius: 12px;
   padding: 4px 16px;
   min-width: 120px;
   min-height: 44px;
-  transition: color 0.2s, background 0.2s;
 }
 #mean span { white-space: nowrap }
 
-/* ── 遮罩（不改變排版，只蓋住文字） ─────────────────────── */
 .masked {
   color: transparent !important;
   background: #ddd !important;
@@ -178,31 +189,22 @@ body {
 .masked * { color: transparent !important }
 #read.masked { color: transparent !important }
 
-/* ── 用例提示 ─────────────────────────────────────────── */
-#hint-area {
-  width: 100%;
-  position: relative;
-  min-height: 52px;
-}
-
+#hint-area { width: 100%; min-height: 52px; }
 #hint {
   font-family: 'Iansui', sans-serif;
   font-size: 22px;
   color: #19451b;
-  line-height: 2.2;
+  line-height: 2.4;
   text-align: center;
-  transition: filter 0.25s;
 }
-.hint-item { display: inline }
+.hint-item { display: inline-block; white-space: nowrap; }
+.hint-sep { display: inline; white-space: normal; margin: 0 1px; }
 .blank { color: #ccc }
 .hint-word { color: #c0392b; font-family: 'Iansui', sans-serif }
-/* 頓號獨立，不在 button 前後 */
-.hint-sep { margin: 0 2px }
 .hint-play {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
   background: #ddeedd;
   color: #19451b;
   border: none;
@@ -217,7 +219,6 @@ body {
 }
 .hint-play:hover { opacity: 1 }
 
-/* ── 聽音打字區 ───────────────────────────────────────── */
 #listen-area {
   width: 100%;
   display: flex;
@@ -225,13 +226,9 @@ body {
   align-items: center;
   gap: 12px;
 }
-#listen-prompt {
-  font-size: 15px;
-  color: #999;
-}
 #listen-input {
   font-family: 'Iansui', sans-serif;
-  font-size: 30px;
+  font-size: 22px;
   width: 90%;
   padding: 10px;
   border: 2px solid #c0876e;
@@ -242,26 +239,10 @@ body {
 }
 #listen-input:focus { border-color: #f0511d }
 #listen-input:disabled { background: #f5f5f5; color: #999 }
-#listen-submit {
-  font-family: 'Huninn', sans-serif;
-  font-size: 22px;
-  padding: 8px 32px;
-  background: #f0511d;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-#listen-submit:disabled { background: #ccc; cursor: default }
-#listen-result {
-  font-size: 36px;
-  font-weight: bold;
-  min-height: 48px;
-}
+#listen-result { font-size: 36px; font-weight: bold; }
 .result-correct { color: #1a7a1a }
 .result-wrong   { color: #cc1111 }
 
-/* ── 底部操作列 ───────────────────────────────────────── */
 #bottom-bar {
   position: sticky;
   bottom: 0;
@@ -269,7 +250,7 @@ body {
   background: #fff;
   border-top: 1px solid #ead8d2;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   padding: 12px 12px calc(28px + env(safe-area-inset-bottom));
   gap: 8px;
   flex-shrink: 0;
@@ -286,10 +267,12 @@ body {
   cursor: pointer;
   color: #666;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #back:hover { background: #e5dcd9 }
 
-/* 星星按鈕 */
 #star {
   background: #f0ebe9;
   border: none;
@@ -333,7 +316,6 @@ body {
 }
 #next:hover { background: #111 }
 
-/* ── Toast ───────────────────────────────────────────── */
 .toast {
   position: fixed;
   bottom: 110px;
@@ -353,71 +335,58 @@ body {
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0) }
 
-/* ── Utility ─────────────────────────────────────────── */
 .hide { display: none !important }
 </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
 <div id="header">
   <div id="mode-tabs">
     <button class="mode-tab active" data-mode="word">漢字</button>
     <button class="mode-tab" data-mode="read">台羅</button>
     <button class="mode-tab" data-mode="mean">華語解釋</button>
   </div>
-  <div id="mode-toggle">
-    <button class="toggle-btn active" id="toggle-all">全部</button>
-    <button class="toggle-btn" id="toggle-star">生份</button>
-  </div>
-  <div id="mode-answer-row" style="margin-top:8px">
-    <button class="toggle-btn active" id="toggle-show">顯示</button>
-    <button class="toggle-btn" id="toggle-type">打字測驗</button>
+  <div id="mode-toggles">
+    <div class="tgl-group" id="pool-toggle">
+      <button class="tgl active" id="toggle-all">全部</button>
+      <button class="tgl" id="toggle-star">生份<svg viewBox="0 0 24 24" width="12" height="12" style="fill:#bbb;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button>
+      <div class="tgl-indicator"></div>
+    </div>
+    <div class="tgl-group" id="answer-toggle">
+      <button class="tgl active" id="toggle-show">顯示</button>
+      <button class="tgl" id="toggle-type">打字</button>
+      <div class="tgl-indicator"></div>
+    </div>
   </div>
 </div>
 
-<!-- ── Main ── -->
 <div id="main">
   <div id="card">
     <span id="no"></span>
-
-    <!-- 台語漢字 -->
     <span id="word"></span>
-
-    <!-- 播音 -->
+    <div id="read">
+      <div id="read1"></div>
+      <div id="read2"></div>
+    </div>
     <button id="play-word-btn" class="play-btn">
       <svg viewBox="0 0 10 13" width="10" height="13" fill="currentColor">
         <polygon points="0,0 10,6.5 0,13"/>
       </svg>
       播音
     </button>
-
-    <!-- 台羅 -->
-    <div id="read">
-      <div id="read1"></div>
-      <div id="read2"></div>
-    </div>
-
-    <!-- 華語解釋 -->
+    <span id="empty-kaomoji" class="hide" style="font-size:28px;color:#c0b0ab;letter-spacing:2px">(* ´ㅁ`*)</span>
     <div id="mean"></div>
-
-    <!-- 用例 -->
     <div id="hint-area">
       <div id="hint"></div>
     </div>
-
-    <!-- 聽音打字 -->
     <div id="listen-area" class="hide">
-      <p id="listen-prompt">請輸入你聽到的字（漢字或台語羅馬拼音）</p>
       <input id="listen-input" type="text" autocomplete="off" autocorrect="off"
              autocapitalize="none" spellcheck="false" placeholder="輸入答案…">
-      <button id="listen-submit">確認</button>
       <div id="listen-result"></div>
     </div>
   </div>
 </div>
 
-<!-- ── Bottom bar ── -->
 <div id="bottom-bar">
   <button id="back">⬅</button>
   <button id="star">
@@ -437,15 +406,14 @@ body {
 
 var ques = null;
 var qi = null;
-var mode = 'word';       // 'word' | 'read' | 'mean'
-var answerMode = 'show'; // 'show' | 'type'
+var mode = 'word';
+var answerMode = 'show';
 var onlyStarred = false;
 var currentQ = null;
 
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
 
-// ── Audio ─────────────────────────────────────────────
 var player = document.getElementById('player');
 
 function playAudio(src) {
@@ -461,16 +429,12 @@ function sampleAudioSrc(q, rawItem) {
   return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, q.word) + '.mp3';
 }
 
-// ── Answer check ─────────────────────────────────────
 function normalizeRoman(str) {
   return str.trim().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/-/g, '').toLowerCase();
 }
 
 function checkAnswer(q, input) {
-  if (mode === 'word') {
-    return input.trim() === q.word;
-  }
-  // mode === 'read': accept romanization with or without tones
+  if (mode === 'word') return input.trim() === q.word;
   if (input.trim() === q.word) return true;
   var norm = normalizeRoman(input);
   var reads = (q.read || []).concat(q.read2 || []);
@@ -480,7 +444,6 @@ function checkAnswer(q, input) {
   return false;
 }
 
-// ── Rendering ────────────────────────────────────────
 function playSvg() {
   return '<svg viewBox="0 0 10 13" width="9" height="11" fill="currentColor"><polygon points="0,0 10,6.5 0,13"/></svg>';
 }
@@ -491,12 +454,11 @@ function toHintSpans(q) {
   for (var i = 0; i < parts.length; i++) {
     var src = sampleAudioSrc(q, parts[i]);
     var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
-    // 播放鍵在詞後，頓號在播放鍵後
     res += '<span class="hint-item">'
          + '<span class="hint-text">' + display + '</span>'
          + '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>'
-         + (i < parts.length - 1 ? '<span class="hint-sep">、</span>' : '')
-         + '</span>';
+         + '</span>'
+         + (i < parts.length - 1 ? '<span class="hint-sep">、</span>' : '');
   }
   return res;
 }
@@ -507,7 +469,6 @@ function revealHintWord(q) {
   });
 }
 
-// ── Toast ────────────────────────────────────────────
 function showToast(msg) {
   var $t = $('<div class="toast">' + msg + '</div>');
   $('body').append($t);
@@ -516,7 +477,6 @@ function showToast(msg) {
   setTimeout(function() { $t.remove(); }, 2600);
 }
 
-// ── Mode helpers ─────────────────────────────────────
 function applyMask() {
   $('#word, #read, #mean').removeClass('masked');
   if (mode === 'word') $('#word').addClass('masked');
@@ -528,20 +488,15 @@ function removeMasks() {
   $('#word, #read, #mean').removeClass('masked');
 }
 
-// ── Start / next ─────────────────────────────────────
 function startMode() {
   ques = [];
-
   if (onlyStarred) {
     var marklist = getMarks();
-    if (!marklist || marklist.length === 0) {
-      showEmpty(); return;
-    }
+    if (!marklist || marklist.length === 0) { showEmpty(); return; }
     for (var i in marklist) ques.push(moe700[qindex[marklist[i]]]);
   } else {
     for (var i in moe700) ques.push(moe700[i]);
   }
-
   for (var i = 0; i < ques.length; i++) {
     var j = Math.floor(Math.random() * ques.length);
     if (i === j) continue;
@@ -557,20 +512,26 @@ function showEmpty() {
   $('#read1').html('Bô mi̍h-kiānn');
   $('#read2').html('');
   $('#read').removeClass('masked');
-  $('#mean').html('<span>尚未標記生份的詞。</span><span>作答時按 ⭐ 加入。</span>').removeClass('masked');
+  $('#mean').html('<span>無已經標示生份的詞。</span><span>若拄著記袂牢的詞，會使揤 <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:-4px;fill:#bbb"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> 共加入來。</span>').removeClass('masked');
   $('#hint').html('');
+  $('#play-word-btn').addClass('hide');
+  $('#empty-kaomoji').removeClass('hide');
   $('#listen-area').addClass('hide');
   $('#show').addClass('hide');
   $('#next').addClass('hide');
   $('#back').addClass('hide');
+  $('#star').addClass('hide');
   currentQ = null;
 }
 
 function nextQuestion() {
   if (qi >= ques.length) { startMode(); return; }
-
   var q = ques[qi];
   currentQ = q;
+  $('#play-word-btn').removeClass('hide');
+  $('#empty-kaomoji').addClass('hide');
+  $('#star').removeClass('hide');
+
   var reads1 = '';
   for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
   var reads2 = '';
@@ -583,26 +544,21 @@ function nextQuestion() {
   $('#mean').html(q.mean.split(/、/).map(function(s){ return '<span>' + s + '</span>'; }).join('、'));
   $('#hint').html(toHintSpans(q));
 
-  // Apply masks (layout stays fixed)
   applyMask();
 
-  // 打字測驗模式（漢字或台羅）
   var isType = (answerMode === 'type') && (mode !== 'mean');
   if (isType) {
-    var prompt = mode === 'word' ? '請輸入台語漢字' : '請輸入台羅拼音（可省略聲調）';
-    $('#listen-prompt').text(prompt);
-    $('#listen-area').removeClass('hide');
+    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅';
+    $('#listen-input').attr('placeholder', ph).val('').prop('disabled', false);
     $('#listen-result').html('');
-    $('#listen-input').val('').prop('disabled', false);
-    $('#listen-submit').prop('disabled', false);
-    $('#show').text('跳過揭示');
+    $('#listen-area').removeClass('hide');
+    $('#show').text('確認答案');
     setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
   } else {
     $('#listen-area').addClass('hide');
     $('#show').text('對答案');
   }
 
-  // Star state
   $('#star').removeClass('starred');
   if (isMarked(q.no)) $('#star').addClass('starred');
 
@@ -613,32 +569,28 @@ function nextQuestion() {
   qi++;
 }
 
-// ── Reveal answer ────────────────────────────────────
 function revealAnswer() {
   removeMasks();
   $('#show').addClass('hide');
   $('#next').removeClass('hide');
   if (currentQ) revealHintWord(currentQ);
-  var isType = (answerMode === 'type') && (mode !== 'mean');
-  if (isType) {
-    $('#listen-submit').prop('disabled', true);
+  if ((answerMode === 'type') && (mode !== 'mean')) {
     $('#listen-input').prop('disabled', true);
   }
 }
 
-// ── Events ───────────────────────────────────────────
 $('.mode-tab').click(function() {
   $('.mode-tab').removeClass('active');
   $(this).addClass('active');
   mode = $(this).data('mode');
-  // 華語解釋不支援打字測驗
   if (mode === 'mean') {
-    $('#mode-answer-row').addClass('hide');
+    $('#answer-toggle').addClass('hide');
     answerMode = 'show';
     $('#toggle-show').addClass('active');
     $('#toggle-type').removeClass('active');
+    $('#answer-toggle').removeClass('right');
   } else {
-    $('#mode-answer-row').removeClass('hide');
+    $('#answer-toggle').removeClass('hide');
   }
   startMode();
 });
@@ -648,6 +600,7 @@ $('#toggle-all').click(function() {
   onlyStarred = false;
   $('#toggle-all').addClass('active');
   $('#toggle-star').removeClass('active');
+  $('#pool-toggle').removeClass('right');
   startMode();
 });
 
@@ -656,6 +609,25 @@ $('#toggle-star').click(function() {
   onlyStarred = true;
   $('#toggle-star').addClass('active');
   $('#toggle-all').removeClass('active');
+  $('#pool-toggle').addClass('right');
+  startMode();
+});
+
+$('#toggle-show').click(function() {
+  if (answerMode === 'show') return;
+  answerMode = 'show';
+  $('#toggle-show').addClass('active');
+  $('#toggle-type').removeClass('active');
+  $('#answer-toggle').removeClass('right');
+  startMode();
+});
+
+$('#toggle-type').click(function() {
+  if (answerMode === 'type') return;
+  answerMode = 'type';
+  $('#toggle-type').addClass('active');
+  $('#toggle-show').removeClass('active');
+  $('#answer-toggle').addClass('right');
   startMode();
 });
 
@@ -667,23 +639,19 @@ $(document).on('click', '.hint-play', function() {
   playAudio($(this).data('src'));
 });
 
-$('#toggle-show').click(function() {
-  if (answerMode === 'show') return;
-  answerMode = 'show';
-  $('#toggle-show').addClass('active');
-  $('#toggle-type').removeClass('active');
-  startMode();
+$('#show').click(function() {
+  var isType = (answerMode === 'type') && (mode !== 'mean');
+  if (isType) {
+    var inp = $('#listen-input').val();
+    if (inp.trim()) {
+      var ok = checkAnswer(currentQ, inp);
+      $('#listen-result').html(ok
+        ? '<span class="result-correct">✓ 正確！</span>'
+        : '<span class="result-wrong">✗ 毋著</span>');
+    }
+  }
+  revealAnswer();
 });
-
-$('#toggle-type').click(function() {
-  if (answerMode === 'type') return;
-  answerMode = 'type';
-  $('#toggle-type').addClass('active');
-  $('#toggle-show').removeClass('active');
-  startMode();
-});
-
-$('#show').click(function() { revealAnswer(); });
 
 $('#next').click(function() { nextQuestion(); });
 
@@ -693,18 +661,8 @@ $('#back').click(function() {
   if (answerMode !== 'type') revealAnswer();
 });
 
-$('#listen-submit').click(function() {
-  var inp = $('#listen-input').val();
-  if (!inp.trim()) return;
-  var ok = checkAnswer(currentQ, inp);
-  $('#listen-result').html(ok
-    ? '<span class="result-correct">✓ 正確！</span>'
-    : '<span class="result-wrong">✗ 毋著</span>');
-  revealAnswer();
-});
-
 $('#listen-input').on('keydown', function(e) {
-  if (e.key === 'Enter') $('#listen-submit').click();
+  if (e.key === 'Enter') $('#show').click();
 });
 
 $('#star').click(function() {
@@ -714,6 +672,7 @@ $('#star').click(function() {
   if (wasStarred) {
     setMarked(no, false);
     $(this).removeClass('starred');
+    showToast('已從生份移除');
   } else {
     setMarked(no, true);
     $(this).addClass('starred');
@@ -721,7 +680,6 @@ $('#star').click(function() {
   }
 });
 
-// ── localStorage（星星跨模式共用） ────────────────────────
 var MARKS_KEY = 'taigi700_starred';
 
 function isMarked(no) {
@@ -742,7 +700,6 @@ function setMarked(no, val) {
   localStorage.setItem(MARKS_KEY, marks);
 }
 
-// ── Init ──────────────────────────────────────────────
 startMode();
 
 </script>
