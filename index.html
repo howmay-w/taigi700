@@ -11,6 +11,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Huninn&display=swap" rel="stylesheet">
 <style>
+@font-face {
+  font-family: NunitoPOJ;
+  src: url(NunitoPOJ-Regular.ttf) format('truetype');
+}
 /* ── Reset ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 
@@ -133,9 +137,9 @@ body {
 .play-btn:hover { opacity: 1; background: #ddc4bc }
 .play-btn svg { flex-shrink: 0 }
 
-/* 台羅 */
+/* 台羅 — 用 NunitoPOJ 確保第八調點符正確顯示 */
 #read {
-  font-family: 'Iansui', sans-serif;
+  font-family: NunitoPOJ, 'Iansui', sans-serif;
   color: #184178;
   text-align: center;
   border-radius: 12px;
@@ -177,11 +181,33 @@ body {
 /* ── 用例提示 ─────────────────────────────────────────── */
 #hint-area {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  position: relative;
+  min-height: 52px;
 }
+
+#hint {
+  font-family: 'Iansui', sans-serif;
+  font-size: 22px;
+  color: #19451b;
+  line-height: 2.2;
+  text-align: center;
+  transition: filter 0.25s;
+}
+#hint.blurred {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 遮罩層，蓋在模糊 hint 上，點了才揭開 */
+#hint-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#hint-overlay.hide { display: none; }
 
 #showhint {
   font-family: 'Huninn', sans-serif;
@@ -194,14 +220,6 @@ body {
   cursor: pointer;
 }
 #showhint:hover { background: #fdf0eb }
-
-#hint {
-  font-family: 'Iansui', sans-serif;
-  font-size: 22px;
-  color: #19451b;
-  line-height: 2.2;
-  text-align: center;
-}
 .hint-item { display: inline }
 .blank { color: #ccc }
 .hint-word { color: #c0392b; font-family: 'Iansui', sans-serif }
@@ -300,17 +318,21 @@ body {
 
 /* 星星按鈕 */
 #star {
-  font-size: 18px;
   background: #f0ebe9;
   border: none;
   border-radius: 10px;
   padding: 11px 14px;
   cursor: pointer;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.15s;
 }
 #star:hover { background: #e5dcd9 }
+#star .star-icon { fill: #bbb; transition: fill 0.2s }
 #star.starred { background: #fff3e0 }
+#star.starred .star-icon { fill: #f5a000 }
 
 #show {
   flex: 1;
@@ -405,8 +427,10 @@ body {
 
     <!-- 用例 -->
     <div id="hint-area">
-      <button id="showhint">顯示用例提示</button>
-      <div id="hint"></div>
+      <div id="hint" class="blurred"></div>
+      <div id="hint-overlay">
+        <button id="showhint">顯示用例提示</button>
+      </div>
     </div>
 
     <!-- 聽音打字 -->
@@ -423,7 +447,11 @@ body {
 <!-- ── Bottom bar ── -->
 <div id="bottom-bar">
   <button id="back">⬅</button>
-  <button id="star">⭐</button>
+  <button id="star">
+    <svg class="star-icon" viewBox="0 0 24 24" width="22" height="22">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+    </svg>
+  </button>
   <button id="show">對答案</button>
   <button id="next" class="hide">後一題</button>
 </div>
@@ -555,8 +583,8 @@ function showEmpty() {
   $('#read2').html('');
   $('#read').addClass('masked');
   $('#mean').html('<span>尚未標記生份的詞。</span><span>作答時按 ⭐ 加入。</span>').removeClass('masked');
-  $('#hint').html('');
-  $('#showhint').addClass('hide');
+  $('#hint').html('').addClass('blurred');
+  $('#hint-overlay').removeClass('hide');
   $('#listen-area').addClass('hide');
   $('#show').addClass('hide');
   $('#next').addClass('hide');
@@ -581,8 +609,8 @@ function nextQuestion() {
   $('#read1').html(reads1);
   $('#read2').html(reads2);
   $('#mean').html(q.mean.split(/、/).map(function(s){ return '<span>' + s + '</span>'; }).join('、'));
-  $('#hint').html(toHintSpans(q)).addClass('hide');
-  $('#showhint').removeClass('hide');
+  $('#hint').html(toHintSpans(q)).addClass('blurred');
+  $('#hint-overlay').removeClass('hide');
 
   // Apply masks (layout stays fixed)
   applyMask();
@@ -601,8 +629,8 @@ function nextQuestion() {
   }
 
   // Star state
-  $('#star').removeClass('starred').text('⭐');
-  if (isMarked(q.no)) $('#star').addClass('starred').text('★');
+  $('#star').removeClass('starred');
+  if (isMarked(q.no)) $('#star').addClass('starred');
 
   $('#show').removeClass('hide');
   $('#next').addClass('hide');
@@ -614,8 +642,8 @@ function nextQuestion() {
 // ── Reveal answer ────────────────────────────────────
 function revealAnswer() {
   removeMasks();
-  $('#hint').removeClass('hide');
-  $('#showhint').addClass('hide');
+  $('#hint').removeClass('blurred');
+  $('#hint-overlay').addClass('hide');
   $('#show').addClass('hide');
   $('#next').removeClass('hide');
   if (currentQ) revealHintWord(currentQ);
@@ -658,8 +686,8 @@ $(document).on('click', '.hint-play', function() {
 });
 
 $('#showhint').click(function() {
-  $('#hint').removeClass('hide');
-  $(this).addClass('hide');
+  $('#hint').removeClass('blurred');
+  $('#hint-overlay').addClass('hide');
 });
 
 $('#show').click(function() { revealAnswer(); });
@@ -692,11 +720,11 @@ $('#star').click(function() {
   var wasStarred = $(this).hasClass('starred');
   if (wasStarred) {
     setMarked(no, false);
-    $(this).removeClass('starred').text('⭐');
+    $(this).removeClass('starred');
   } else {
     setMarked(no, true);
-    $(this).addClass('starred').text('★');
-    showToast('已加入生份的詞 ⭐');
+    $(this).addClass('starred');
+    showToast('已加入生份的詞');
   }
 });
 
