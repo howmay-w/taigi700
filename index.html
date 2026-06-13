@@ -53,7 +53,7 @@ body {
 }
 .mode-tab.active { background: #f0511d; color: #fff }
 
-#mode-toggle {
+#mode-toggle, #mode-answer-row {
   display: flex;
   gap: 0;
   background: #2e2e2e;
@@ -193,33 +193,6 @@ body {
   text-align: center;
   transition: filter 0.25s;
 }
-#hint.blurred {
-  filter: blur(6px);
-  user-select: none;
-  pointer-events: none;
-}
-
-/* 遮罩層，蓋在模糊 hint 上，點了才揭開 */
-#hint-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#hint-overlay.hide { display: none; }
-
-#showhint {
-  font-family: 'Huninn', sans-serif;
-  font-size: 15px;
-  background: none;
-  border: 1.5px solid #c0876e;
-  color: #c0876e;
-  border-radius: 8px;
-  padding: 5px 16px;
-  cursor: pointer;
-}
-#showhint:hover { background: #fdf0eb }
 .hint-item { display: inline }
 .blank { color: #ccc }
 .hint-word { color: #c0392b; font-family: 'Iansui', sans-serif }
@@ -392,11 +365,14 @@ body {
     <button class="mode-tab active" data-mode="word">漢字</button>
     <button class="mode-tab" data-mode="read">台羅</button>
     <button class="mode-tab" data-mode="mean">華語解釋</button>
-    <button class="mode-tab" data-mode="listen">聽音打字</button>
   </div>
   <div id="mode-toggle">
     <button class="toggle-btn active" id="toggle-all">全部</button>
     <button class="toggle-btn" id="toggle-star">生份</button>
+  </div>
+  <div id="mode-answer-row" style="margin-top:8px">
+    <button class="toggle-btn active" id="toggle-show">顯示</button>
+    <button class="toggle-btn" id="toggle-type">打字測驗</button>
   </div>
 </div>
 
@@ -427,10 +403,7 @@ body {
 
     <!-- 用例 -->
     <div id="hint-area">
-      <div id="hint" class="blurred"></div>
-      <div id="hint-overlay">
-        <button id="showhint">顯示用例提示</button>
-      </div>
+      <div id="hint"></div>
     </div>
 
     <!-- 聽音打字 -->
@@ -464,7 +437,8 @@ body {
 
 var ques = null;
 var qi = null;
-var mode = 'word';
+var mode = 'word';       // 'word' | 'read' | 'mean'
+var answerMode = 'show'; // 'show' | 'type'
 var onlyStarred = false;
 var currentQ = null;
 
@@ -492,7 +466,11 @@ function normalizeRoman(str) {
   return str.trim().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/-/g, '').toLowerCase();
 }
 
-function checkListenAnswer(q, input) {
+function checkAnswer(q, input) {
+  if (mode === 'word') {
+    return input.trim() === q.word;
+  }
+  // mode === 'read': accept romanization with or without tones
   if (input.trim() === q.word) return true;
   var norm = normalizeRoman(input);
   var reads = (q.read || []).concat(q.read2 || []);
@@ -540,13 +518,10 @@ function showToast(msg) {
 
 // ── Mode helpers ─────────────────────────────────────
 function applyMask() {
-  // Clear all masks first
   $('#word, #read, #mean').removeClass('masked');
-
-  if (mode === 'word')   $('#word').addClass('masked');
-  if (mode === 'read')   $('#read').addClass('masked');
-  if (mode === 'mean')   $('#mean').addClass('masked');
-  if (mode === 'listen') $('#word, #read, #mean').addClass('masked');
+  if (mode === 'word') $('#word').addClass('masked');
+  if (mode === 'read') $('#read').addClass('masked');
+  if (mode === 'mean') $('#mean').addClass('masked');
 }
 
 function removeMasks() {
@@ -583,8 +558,7 @@ function showEmpty() {
   $('#read2').html('');
   $('#read').removeClass('masked');
   $('#mean').html('<span>尚未標記生份的詞。</span><span>作答時按 ⭐ 加入。</span>').removeClass('masked');
-  $('#hint').html('').addClass('blurred');
-  $('#hint-overlay').removeClass('hide');
+  $('#hint').html('');
   $('#listen-area').addClass('hide');
   $('#show').addClass('hide');
   $('#next').addClass('hide');
@@ -597,8 +571,6 @@ function nextQuestion() {
 
   var q = ques[qi];
   currentQ = q;
-  var isListen = (mode === 'listen');
-
   var reads1 = '';
   for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
   var reads2 = '';
@@ -609,14 +581,16 @@ function nextQuestion() {
   $('#read1').html(reads1);
   $('#read2').html(reads2);
   $('#mean').html(q.mean.split(/、/).map(function(s){ return '<span>' + s + '</span>'; }).join('、'));
-  $('#hint').html(toHintSpans(q)).addClass('blurred');
-  $('#hint-overlay').removeClass('hide');
+  $('#hint').html(toHintSpans(q));
 
   // Apply masks (layout stays fixed)
   applyMask();
 
-  // Listen area
-  if (isListen) {
+  // 打字測驗模式（漢字或台羅）
+  var isType = (answerMode === 'type') && (mode !== 'mean');
+  if (isType) {
+    var prompt = mode === 'word' ? '請輸入台語漢字' : '請輸入台羅拼音（可省略聲調）';
+    $('#listen-prompt').text(prompt);
     $('#listen-area').removeClass('hide');
     $('#listen-result').html('');
     $('#listen-input').val('').prop('disabled', false);
@@ -642,12 +616,11 @@ function nextQuestion() {
 // ── Reveal answer ────────────────────────────────────
 function revealAnswer() {
   removeMasks();
-  $('#hint').removeClass('blurred');
-  $('#hint-overlay').addClass('hide');
   $('#show').addClass('hide');
   $('#next').removeClass('hide');
   if (currentQ) revealHintWord(currentQ);
-  if (mode === 'listen') {
+  var isType = (answerMode === 'type') && (mode !== 'mean');
+  if (isType) {
     $('#listen-submit').prop('disabled', true);
     $('#listen-input').prop('disabled', true);
   }
@@ -658,6 +631,15 @@ $('.mode-tab').click(function() {
   $('.mode-tab').removeClass('active');
   $(this).addClass('active');
   mode = $(this).data('mode');
+  // 華語解釋不支援打字測驗
+  if (mode === 'mean') {
+    $('#mode-answer-row').addClass('hide');
+    answerMode = 'show';
+    $('#toggle-show').addClass('active');
+    $('#toggle-type').removeClass('active');
+  } else {
+    $('#mode-answer-row').removeClass('hide');
+  }
   startMode();
 });
 
@@ -685,9 +667,20 @@ $(document).on('click', '.hint-play', function() {
   playAudio($(this).data('src'));
 });
 
-$('#showhint').click(function() {
-  $('#hint').removeClass('blurred');
-  $('#hint-overlay').addClass('hide');
+$('#toggle-show').click(function() {
+  if (answerMode === 'show') return;
+  answerMode = 'show';
+  $('#toggle-show').addClass('active');
+  $('#toggle-type').removeClass('active');
+  startMode();
+});
+
+$('#toggle-type').click(function() {
+  if (answerMode === 'type') return;
+  answerMode = 'type';
+  $('#toggle-type').addClass('active');
+  $('#toggle-show').removeClass('active');
+  startMode();
 });
 
 $('#show').click(function() { revealAnswer(); });
@@ -697,13 +690,13 @@ $('#next').click(function() { nextQuestion(); });
 $('#back').click(function() {
   qi -= 2;
   nextQuestion();
-  if (mode !== 'listen') revealAnswer();
+  if (answerMode !== 'type') revealAnswer();
 });
 
 $('#listen-submit').click(function() {
   var inp = $('#listen-input').val();
   if (!inp.trim()) return;
-  var ok = checkListenAnswer(currentQ, inp);
+  var ok = checkAnswer(currentQ, inp);
   $('#listen-result').html(ok
     ? '<span class="result-correct">✓ 正確！</span>'
     : '<span class="result-wrong">✗ 毋著</span>');
