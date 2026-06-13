@@ -39,6 +39,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; font-synthesis: none; }
 
 html { background: var(--navy) }
 
@@ -707,8 +708,8 @@ body {
 .filter-btn[data-level="3"] { background: var(--blue); border-color: var(--blue); color: #fff; opacity: 0.55; }
 .filter-btn[data-level="4"] { background: var(--navy); border-color: var(--navy); color: #fff; opacity: 0.55; }
 .filter-btn[data-level]:not([data-level="all"]).active { opacity: 1; outline: 2.5px solid rgba(17,24,68,0.35); outline-offset: 2px; }
-.filter-btn-star { background: #fff7e6; border-color: var(--amber); color: #9a6700; opacity: 1; }
-.filter-btn-star.active { background: var(--amber); color: #fff; border-color: var(--amber); outline-color: rgba(250,185,91,0.5); }
+.filter-btn-star { background: rgba(250,185,91,0.22); border-color: transparent; color: #9a6700; opacity: 1; }
+.filter-btn-star.active { background: var(--amber); color: #fff; border-color: transparent; outline-color: rgba(250,185,91,0.5); }
 
 #overview-grid {
   display: grid;
@@ -1107,7 +1108,7 @@ body {
     <span id="header-title">台語 700 單字卡</span>
     <div id="desktop-nav">
       <button class="desktop-nav-btn" id="desktop-goto-overview">字卡總覽</button>
-      <button class="desktop-nav-btn" id="desktop-goto-about">關於本站</button>
+      <button class="desktop-nav-btn" id="desktop-goto-about">介紹</button>
       <button class="desktop-nav-btn" id="desktop-goto-settings">資料佮設定</button>
     </div>
     <button id="menu-btn" aria-label="選單">&#9776;</button>
@@ -1208,7 +1209,7 @@ body {
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
     </svg>
-    關於本站
+    介紹
   </button>
   <button class="menu-item" id="goto-settings">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1262,7 +1263,7 @@ body {
     <button class="page-back" id="about-back">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <span class="page-title">關於本站</span>
+    <span class="page-title">介紹</span>
     <div id="about-lang-toggle">
       <button class="alang-btn active" data-lang="taigi">台語</button>
       <button class="alang-btn" data-lang="zh">華語</button>
@@ -1804,7 +1805,7 @@ function renderOverview() {
   $('#overview-grid').html(html);
 
   var learned = counts[1] + counts[2] + counts[3] + counts[4];
-  $('#overview-stats-inline').text('已接觸 ' + learned + ' / 700');
+  $('#overview-stats-inline').text(learned + ' / 700');
 
   $('.filter-btn[data-level="all"]').text('全部 700');
   $('.filter-btn[data-level="0"]').text('未學 ' + counts[0]);
@@ -2116,6 +2117,14 @@ $('#listen-input').on('input', function() {
 });
 $('#listen-input').on('keydown', function(e) {
   if (e.key === 'Enter' && !$('#show').prop('disabled')) $('#show').click();
+});
+
+// Enter 鍵快速操作（輸入框以外）
+$(document).on('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  if ($(document.activeElement).is('#listen-input')) return;
+  if (!$('#next').hasClass('hide')) { $('#next').click(); return; }
+  if (!$('#show').hasClass('hide') && !$('#show').prop('disabled')) { $('#show').click(); }
 });
 
 $('#star').click(function() {
