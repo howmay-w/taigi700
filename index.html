@@ -1278,7 +1278,7 @@ strong, b { font-weight: normal; }
       <div class="about-lang" id="about-taigi">
         <div class="about-section">
           <p>因為家己 beh 練習，所以整理各位先進 ê 資源、koh 請 Claude 寫 99% 程式碼所創出來 ê 家私，希望會對有仝款需求 ê 逐家有幫贊。</p>
-          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a></p>
+          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a>／顧問：<a class="about-link" href="https://kiantiong.com" target="_blank" rel="noopener">建中</a></p>
         </div>
         <div class="about-section">
           <h2>練習模式</h2>
@@ -1325,7 +1325,7 @@ strong, b { font-weight: normal; }
       <div class="about-lang hide" id="about-zh">
         <div class="about-section">
           <p>因為自己想練習，所以整理前輩們的資源，再請 Claude 寫 99% 程式碼才完成的工具，希望能幫助到有同樣需求的大家。</p>
-          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a></p>
+          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a>／顧問：<a class="about-link" href="https://kiantiong.com" target="_blank" rel="noopener">建中</a></p>
         </div>
         <div class="about-section">
           <h2>練習模式</h2>
@@ -1473,7 +1473,8 @@ function wordAudioSrc(q) {
 
 function sampleAudioSrc(q, rawItem) {
   var wordBase = q.word.replace(/\(.*?\)/g, '');
-  return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, wordBase) + '.mp3';
+  var fname = rawItem.replace(/～/g, wordBase).replace(/，/g, ',');
+  return 'audio/minnan700-' + q.no + '-' + fname + '.mp3';
 }
 
 // 聲調符號 → 數字對應表
