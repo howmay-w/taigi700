@@ -1456,20 +1456,37 @@ function practiceWord(no) {
 
 // ── 練習主流程 ────────────────────────────────────────────
 
+function shuffle(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var j = Math.floor(Math.random() * arr.length);
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
 function startMode() {
-  ques = [];
+  var pool = [];
   if (onlyStarred) {
     var marklist = getMarks();
     if (!marklist || marklist.length === 0) { showEmpty(); return; }
-    for (var i in marklist) ques.push(moe700[qindex[marklist[i]]]);
+    for (var i in marklist) pool.push(moe700[qindex[marklist[i]]]);
   } else {
-    for (var i in moe700) ques.push(moe700[i]);
+    for (var i in moe700) pool.push(moe700[i]);
   }
-  for (var i = 0; i < ques.length; i++) {
-    var j = Math.floor(Math.random() * ques.length);
-    if (i === j) continue;
-    var tmp = ques[i]; ques[i] = ques[j]; ques[j] = tmp;
+
+  // 依熟練等級分組，各組內隨機，低分先出
+  var data = getProfData();
+  var groups = [[], [], [], [], []];
+  for (var i = 0; i < pool.length; i++) {
+    var level = scoreToProfLevel(data[pool[i].no] || 0);
+    groups[level].push(pool[i]);
   }
+  ques = shuffle(groups[0])
+    .concat(shuffle(groups[1]))
+    .concat(shuffle(groups[2]))
+    .concat(shuffle(groups[3]))
+    .concat(shuffle(groups[4]));
+
   qi = 0;
   nextQuestion();
 }
