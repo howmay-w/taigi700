@@ -1,1 +1,226 @@
-Hello World
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-tw" lang="zh-tw">
+<head>
+<title>教育部700建議用字練習</title>
+<meta charset="utf-8">
+<meta name="theme-color" content="#f0511d">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<style>
+@font-face{
+    font-family: NunitoPOJ; font-weight: 600;
+	src: url(NunitoPOJ-Regular.ttf) format("truetype");
+}
+
+@font-face{
+    font-family: GenYoExt; font-weight: 600;
+	src: url(GenYoExt-R.woff2) format("woff2"), url(GenYoExt-R.woff) format("woff"), url(GenYoExt-R.otf) format("opentype");
+}
+
+body { text-align: center; background-color: #fcede8; margin: 0; font-family: sans-serif }
+div, span { margin: 0 }
+
+#head { background-color: #222; height: 40px; padding: 10px; color: #fff; font-size: 24px }
+#head select { height: 40px; font-size: 25px; background-color: #222; color: #fff }
+
+#ques { padding: 20px 10px }
+#ques > span { display: block; margin-bottom: 20px }
+#no { font-size: 20px; color: #a39996; margin-bottom: 10px !important }
+#word { font-size: 70px; font-family: GenYoExt; color: #521b0b; line-height: 90px }
+#read { font-family: NunitoPOJ; color: #184178 }
+	#read1 { font-size: 50px; display: block }
+	#read1 span { display: block }
+	#read2 { font-size: 30px; line-height: 1.3; display: block }
+	#read2 span { white-space: nowrap }
+#mean { font-size: 32px }
+#hint { font-size: 32px; font-family: GenYoExt; color: #19451b }
+#mean > span, #hint > span { white-space: nowrap }
+
+.hide { visibility: hidden }
+
+#butts { margin: 15px 0; position: fixed; bottom: 0; width: 100% }
+#butts button { font-size: 35px }
+#showhint { font-size: 20px; display: block; margin: 10px auto 30px auto }
+
+#butts span {  display: block; width: 1.2em; position: absolute; line-height: 1.2; font-size: 40px; cursor: pointer; bottom: 5px }
+#star { right: 10px }
+	.gray { filter: grayscale(100%); opacity: 0.7 }
+#back { left: 10px; filter: grayscale(100%); opacity: 0.7 }
+
+</style>
+<body lang="zh-tw">
+<div id="head">
+	欲考啥物：<select id="mode">
+		<option value="word">推薦用字</option>
+		<option value="read">讀音</option>
+		<option value="mean">華語解釋</option>
+		<option value="starword">生份的推薦用字</option>
+		<option value="starread">生份的讀音</option>
+		<option value="starmean">生份的華語解釋</option>
+	</select>
+</div>
+
+<div id="ques">
+	<span id="no"></span>
+	<span id="word"></span>
+	<span id="hint"></span>
+	<button id="showhint">顯示用例提示</button>
+	<span id="read">
+		<span id="read1"></span>
+		<span id="read2"></span>
+	</span>
+	<span id="mean"></span>
+</div>
+
+<div id="butts">
+	<span id="back">⬅️</span>
+	<span id="star" class="gray">⭐</span>
+	<button id="show">對答案</button>
+	<button id="next">後一題</button>
+</div>
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+<script src="moe700.js" charset="utf-8"></script>
+<script>
+
+var ques = null;
+var qi = null;
+
+//var initialized = false;
+var mode = null; //'word';
+// var onlyStarred = false;
+
+var qindex = {};
+for (var i in moe700) qindex[moe700[i].no + ''] = i;
+
+function toSpans(str) {
+	var res = '';
+	var tmp = str.split(/、/);
+	for (var i in tmp) res += '<span>' + tmp[i] + (i == tmp.length-1 ? '' : '、') + '</span>';
+	return res;
+}
+
+$('#showhint').click(function() {
+	$('#hint').show();
+	$('#showhint').hide();
+});
+
+$('#show').click(function() {
+	$('.hide').removeClass('hide');
+	$('#hint').show();
+	$('#showhint').hide();
+
+	$('#show').hide();
+	$('#next').show();
+});
+
+$('#next').click(function() {
+	if (qi >= ques.length) {
+		$('#mode').change();
+		return;
+	}
+	
+	var q = ques[qi];
+	
+	var reads1 = '';
+	for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
+	var reads2 = '';
+	if (q.read2) for (var r in q.read2) reads2 += (r == 0 ? '' : ' / ') + '<span>' + q.read2[r] + '</span>';
+	
+	$('#'+mode).addClass('hide');
+	$('#no').text(q.no);
+	$('#word').text(q.word);
+	$('#read1').html(reads1);
+	$('#read2').html(reads2);
+	$('#mean').html(toSpans(q.mean));
+	$('#hint').html(toSpans(q.sample)).hide();
+	$('#showhint').show();
+	
+	$('#star').show().addClass('gray');
+	if (isMarked(mode, q.no)) $('#star').removeClass('gray');
+	
+	$('#next').hide();
+	$('#show').show();
+	if (qi >= 1) $('#back').show(); else $('#back').hide();
+	
+	qi++;
+});
+
+$('#mode').change(function() {
+	mode = $('#mode').val();
+	var onlyStarred = mode.substring(0, 4) == 'star';
+	if (onlyStarred) mode = mode.substring(4);
+	
+	ques = [];
+	if (onlyStarred) {
+		var marklist = getMarks(mode, no);
+		if (marklist == null || marklist.length == 0) {
+			$('#no').text('');
+			$('#word').text('');
+			$('#read').removeClass('hide');
+			$('#read1').html('Bô mi̍h-kiānn');
+			$('#read2').html();
+			$('#mean').html('<span>你無已經標示生份的詞。</span><span>若拄著記袂牢的詞，</span><span>會使揤星仔共加入來。</span>').removeClass('hide');
+			$('#hint').html('').hide();
+			$('#showhint').hide();
+			$('#star').hide();
+			$('#next').hide();
+			$('#show').hide();
+			$('#back').hide();
+			return;
+		}
+		for (var i in marklist) ques.push(moe700[qindex[marklist[i]]]);
+	} else {
+		for (var i in moe700) ques.push(moe700[i]);
+	}
+	
+	// shuffle
+	for (var i=0; i<ques.length; i++) {
+		var j = Math.floor(Math.random() * ques.length);
+		if (i == j) continue;
+		var tmp = ques[i];
+		ques[i] = ques[j];
+		ques[j] = tmp;
+	}
+	qi = 0;
+	
+	$('.hide').removeClass('hide');
+	$('#'+mode).addClass('hide');
+	$('#next').click();
+}).change();
+
+$('#back').click(function() {
+	qi -= 2;
+	$('#next').click();
+	$('#show').click();
+});
+
+
+$('#star').click(function() {
+	var val = $(this).hasClass('gray');
+	setMarked(mode, $('#no').text(), val);
+	$(this).toggleClass('gray');
+});
+
+function isMarked(mode, no) {
+	var marks = localStorage.getItem('taigi700_' + mode);
+	if (marks == null || marks == '') return false;
+	return marks.match('&' + no + '&');
+}
+
+function getMarks(mode, no) {
+	var marks = localStorage.getItem('taigi700_' + mode);
+	if (marks == null || marks == '' || marks == '&') return null;
+	return marks.replace(/^\&|\&$/g, '').split('&');
+}
+
+function setMarked(mode, no, val) {
+	var marks = localStorage.getItem('taigi700_' + mode);
+	if (marks != null && marks != '') marks = marks.replace('&' + no + '&', '&').replace(/\&+/g, '&');
+	if (val) marks = ((marks != null && marks != '' && marks != '&') ? marks : '&') + no + '&';
+	localStorage.setItem('taigi700_' + mode, marks);
+}
+
+</script>
+
+</html>
