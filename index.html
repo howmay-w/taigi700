@@ -187,13 +187,14 @@ body {
   font-size: 12px;
   color: var(--slate);
   text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1.5px solid var(--slate);
-  background: transparent;
-  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  padding: 4px 9px;
+  border-radius: 7px;
+  border: none;
+  background: var(--beige);
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
 }
-#dict-btn:hover { color: var(--blue); border-color: var(--blue); background: rgba(75,86,148,0.06); }
+#dict-btn:hover { color: var(--navy); background: var(--stone); }
 
 #word {
   font-family: 'Iansui', sans-serif;
@@ -955,7 +956,7 @@ body {
           </div>
           <p>分數累積了後自動升等：</p>
           <div class="prof-legend">
-            <div class="prof-badge"><div class="prof-dot" style="background:#fff;border:1.5px solid #ccc"></div>猶未接觸（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#fff"></div>猶未接觸（0 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>有接觸過（1–5 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
@@ -1013,7 +1014,7 @@ body {
           </div>
           <p>分數累積後自動升級：</p>
           <div class="prof-legend">
-            <div class="prof-badge"><div class="prof-dot" style="background:#fff;border:1.5px solid #ccc"></div>未接觸（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#fff"></div>未接觸（0 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸過（1–5 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習中（6–15 分）</div>
             <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟練（16–30 分）</div>
