@@ -2156,6 +2156,7 @@ function refreshAnswerMode() {
     $('#listen-area').addClass('hide');
     $('#show').text('看答案').prop('disabled', false).removeClass('hide');
     $('#next').addClass('hide');
+    if (getSettings().autoplay_show) setTimeout(function() { playAudio(wordAudioSrc(currentQ)); }, 200);
   }
 }
 
