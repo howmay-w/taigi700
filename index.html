@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-tw" lang="zh-tw">
 <head>
 <title>教育部700建議用字練習</title>
@@ -8,12 +8,11 @@
 <style>
 @font-face{
     font-family: NunitoPOJ; font-weight: 600;
-	src: url(NunitoPOJ-Regular.ttf) format("truetype");
+    src: url(NunitoPOJ-Regular.ttf) format("truetype");
 }
-
 @font-face{
     font-family: GenYoExt; font-weight: 600;
-	src: url(GenYoExt-R.woff2) format("woff2"), url(GenYoExt-R.woff) format("woff"), url(GenYoExt-R.otf) format("opentype");
+    src: url(GenYoExt-R.woff2) format("woff2"), url(GenYoExt-R.woff) format("woff"), url(GenYoExt-R.otf) format("opentype");
 }
 
 body { text-align: center; background-color: #fcede8; margin: 0; font-family: sans-serif }
@@ -22,61 +21,113 @@ div, span { margin: 0 }
 #head { background-color: #222; height: 40px; padding: 10px; color: #fff; font-size: 24px }
 #head select { height: 40px; font-size: 25px; background-color: #222; color: #fff }
 
-#ques { padding: 20px 10px }
-#ques > span { display: block; margin-bottom: 20px }
-#no { font-size: 20px; color: #a39996; margin-bottom: 10px !important }
+#ques { padding: 20px 10px 100px }
+#no { display: block; font-size: 20px; color: #a39996; margin-bottom: 10px }
+
+#word-row { display: block; margin-bottom: 20px }
 #word { font-size: 70px; font-family: GenYoExt; color: #521b0b; line-height: 90px }
-#read { font-family: NunitoPOJ; color: #184178 }
-	#read1 { font-size: 50px; display: block }
-	#read1 span { display: block }
-	#read2 { font-size: 30px; line-height: 1.3; display: block }
-	#read2 span { white-space: nowrap }
-#mean { font-size: 32px }
-#hint { font-size: 32px; font-family: GenYoExt; color: #19451b }
-#mean > span, #hint > span { white-space: nowrap }
+#play-word-btn { font-size: 28px; display: block; margin: 2px auto 0; background: none; border: none; cursor: pointer; opacity: 0.6 }
+#play-word-btn:hover { opacity: 1 }
+
+#read { font-family: NunitoPOJ; color: #184178; display: block; margin-bottom: 20px }
+    #read1 { font-size: 50px; display: block }
+    #read1 span { display: block }
+    #read2 { font-size: 30px; line-height: 1.3; display: block }
+    #read2 span { white-space: nowrap }
+#mean { font-size: 32px; display: block; margin-bottom: 20px }
+#hint { font-size: 32px; font-family: GenYoExt; color: #19451b; display: block; margin-bottom: 10px }
+#mean > span, #hint .hint-text { white-space: nowrap }
 
 .hide { visibility: hidden }
 
 #butts { margin: 15px 0; position: fixed; bottom: 0; width: 100% }
 #butts button { font-size: 35px }
-#showhint { font-size: 20px; display: block; margin: 10px auto 30px auto }
+#showhint { font-size: 20px; display: block; margin: 10px auto 20px auto }
 
-#butts span {  display: block; width: 1.2em; position: absolute; line-height: 1.2; font-size: 40px; cursor: pointer; bottom: 5px }
+#butts span { display: block; width: 1.2em; position: absolute; line-height: 1.2; font-size: 40px; cursor: pointer; bottom: 5px }
 #star { right: 10px }
-	.gray { filter: grayscale(100%); opacity: 0.7 }
+    .gray { filter: grayscale(100%); opacity: 0.7 }
 #back { left: 10px; filter: grayscale(100%); opacity: 0.7 }
 
+/* hint play buttons */
+.hint-item { display: inline }
+.hint-play { background: none; border: none; cursor: pointer; font-size: 0.75em; vertical-align: middle; opacity: 0.6; padding: 0 2px }
+.hint-play:hover { opacity: 1 }
+
+/* listen mode */
+#listen-area { margin: 10px auto; max-width: 420px }
+#replay-btn { font-size: 60px; background: none; border: none; cursor: pointer; opacity: 0.75; display: block; margin: 0 auto 16px }
+#replay-btn:hover { opacity: 1 }
+#listen-prompt { font-size: 18px; color: #666; margin: 0 0 10px }
+#listen-input {
+    font-size: 32px; font-family: GenYoExt, NunitoPOJ, sans-serif;
+    width: 80%; padding: 8px; margin: 6px 0;
+    border: 2px solid #c0876e; border-radius: 8px;
+    text-align: center; background: #fff8f5;
+    box-sizing: border-box;
+}
+#listen-input:focus { outline: none; border-color: #f0511d }
+#listen-submit {
+    font-size: 26px; padding: 6px 24px;
+    background: #f0511d; color: #fff;
+    border: none; border-radius: 8px; cursor: pointer; margin: 10px 4px;
+}
+#listen-submit:disabled { background: #ccc; cursor: default }
+#listen-result { font-size: 40px; font-weight: bold; min-height: 52px; margin: 6px 0 }
+.result-correct { color: #1a7a1a }
+.result-wrong   { color: #cc1111 }
 </style>
 <body lang="zh-tw">
+
 <div id="head">
-	欲考啥物：<select id="mode">
-		<option value="word">推薦用字</option>
-		<option value="read">讀音</option>
-		<option value="mean">華語解釋</option>
-		<option value="starword">生份的推薦用字</option>
-		<option value="starread">生份的讀音</option>
-		<option value="starmean">生份的華語解釋</option>
-	</select>
+    欲考啥物：<select id="mode">
+        <option value="word">推薦用字</option>
+        <option value="read">讀音</option>
+        <option value="mean">華語解釋</option>
+        <option value="starword">生份的推薦用字</option>
+        <option value="starread">生份的讀音</option>
+        <option value="starmean">生份的華語解釋</option>
+        <option value="listen">聽音辨字</option>
+        <option value="starlisten">生份的聽音辨字</option>
+    </select>
 </div>
 
 <div id="ques">
-	<span id="no"></span>
-	<span id="word"></span>
-	<span id="hint"></span>
-	<button id="showhint">顯示用例提示</button>
-	<span id="read">
-		<span id="read1"></span>
-		<span id="read2"></span>
-	</span>
-	<span id="mean"></span>
+    <span id="no"></span>
+
+    <span id="word-row">
+        <span id="word"></span>
+        <button id="play-word-btn" title="播音">🔊</button>
+    </span>
+
+    <span id="hint"></span>
+    <button id="showhint">顯示用例提示</button>
+
+    <span id="read">
+        <span id="read1"></span>
+        <span id="read2"></span>
+    </span>
+    <span id="mean"></span>
+
+    <div id="listen-area" style="display:none">
+        <button id="replay-btn" title="重播">🔊</button>
+        <p id="listen-prompt">請輸入你聽到的字（漢字或台語羅馬拼音）</p>
+        <input id="listen-input" type="text" autocomplete="off" autocorrect="off"
+               autocapitalize="none" spellcheck="false" placeholder="輸入答案…">
+        <br>
+        <button id="listen-submit">確認</button>
+        <div id="listen-result"></div>
+    </div>
 </div>
 
 <div id="butts">
-	<span id="back">⬅️</span>
-	<span id="star" class="gray">⭐</span>
-	<button id="show">對答案</button>
-	<button id="next">後一題</button>
+    <span id="back">⬅️</span>
+    <span id="star" class="gray">⭐</span>
+    <button id="show">對答案</button>
+    <button id="next">後一題</button>
 </div>
+
+<audio id="player"></audio>
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
@@ -85,142 +136,239 @@ div, span { margin: 0 }
 
 var ques = null;
 var qi = null;
-
-//var initialized = false;
-var mode = null; //'word';
-// var onlyStarred = false;
+var mode = null;
+var currentQ = null;
 
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
 
-function toSpans(str) {
-	var res = '';
-	var tmp = str.split(/、/);
-	for (var i in tmp) res += '<span>' + tmp[i] + (i == tmp.length-1 ? '' : '、') + '</span>';
-	return res;
+// ── Audio ────────────────────────────────────────────────
+var player = document.getElementById('player');
+
+function playAudio(src) {
+    player.src = src;
+    player.play().catch(function() {});
 }
 
+function wordAudioSrc(q) {
+    return 'audio/minnan700-' + q.no + '-' + q.word + '.mp3';
+}
+
+function sampleAudioSrc(q, rawItem) {
+    return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, q.word) + '.mp3';
+}
+
+// ── Answer checking ──────────────────────────────────────
+function normalizeRoman(str) {
+    return str.trim().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/-/g, '').toLowerCase();
+}
+
+function checkListenAnswer(q, input) {
+    if (input.trim() === q.word) return true;
+    var norm = normalizeRoman(input);
+    var reads = (q.read || []).concat(q.read2 || []);
+    for (var i = 0; i < reads.length; i++) {
+        if (normalizeRoman(reads[i]) === norm) return true;
+    }
+    return false;
+}
+
+// ── Rendering helpers ────────────────────────────────────
+function toSpans(str) {
+    var parts = str.split(/、/);
+    var res = '';
+    for (var i in parts) res += '<span>' + parts[i] + (i == parts.length - 1 ? '' : '、') + '</span>';
+    return res;
+}
+
+function toHintSpans(q) {
+    var parts = q.sample.split(/、/);
+    var res = '';
+    for (var i = 0; i < parts.length; i++) {
+        var src = sampleAudioSrc(q, parts[i]);
+        res += '<span class="hint-item">'
+             + '<span class="hint-text">' + parts[i] + (i < parts.length - 1 ? '、' : '') + '</span>'
+             + '<button class="hint-play" data-src="' + src + '">🔊</button>'
+             + '</span>';
+    }
+    return res;
+}
+
+// ── Event bindings ───────────────────────────────────────
+$(document).on('click', '.hint-play', function() {
+    playAudio($(this).data('src'));
+});
+
+$('#play-word-btn').click(function() {
+    if (currentQ) playAudio(wordAudioSrc(currentQ));
+});
+
+$('#replay-btn').click(function() {
+    if (currentQ) playAudio(wordAudioSrc(currentQ));
+});
+
 $('#showhint').click(function() {
-	$('#hint').show();
-	$('#showhint').hide();
+    $('#hint').show();
+    $('#showhint').hide();
 });
 
 $('#show').click(function() {
-	$('.hide').removeClass('hide');
-	$('#hint').show();
-	$('#showhint').hide();
-
-	$('#show').hide();
-	$('#next').show();
+    $('.hide').removeClass('hide');
+    $('#hint').show();
+    $('#showhint').hide();
+    $('#show').hide();
+    $('#next').show();
+    if (mode === 'listen') {
+        $('#word-row').show();
+        $('#read').show();
+        $('#mean').show();
+        $('#listen-submit').prop('disabled', true);
+        $('#listen-input').prop('disabled', true);
+    }
 });
 
+$('#listen-submit').click(function() {
+    var inp = $('#listen-input').val();
+    if (!inp.trim()) return;
+    var ok = checkListenAnswer(currentQ, inp);
+    $('#listen-result').html(ok
+        ? '<span class="result-correct">✓ 正確！</span>'
+        : '<span class="result-wrong">✗ 毋著</span>');
+    $('#listen-submit').prop('disabled', true);
+    $('#listen-input').prop('disabled', true);
+    $('#show').click();
+});
+
+$('#listen-input').on('keydown', function(e) {
+    if (e.key === 'Enter') $('#listen-submit').click();
+});
+
+// ── Next question ────────────────────────────────────────
 $('#next').click(function() {
-	if (qi >= ques.length) {
-		$('#mode').change();
-		return;
-	}
-	
-	var q = ques[qi];
-	
-	var reads1 = '';
-	for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
-	var reads2 = '';
-	if (q.read2) for (var r in q.read2) reads2 += (r == 0 ? '' : ' / ') + '<span>' + q.read2[r] + '</span>';
-	
-	$('#'+mode).addClass('hide');
-	$('#no').text(q.no);
-	$('#word').text(q.word);
-	$('#read1').html(reads1);
-	$('#read2').html(reads2);
-	$('#mean').html(toSpans(q.mean));
-	$('#hint').html(toSpans(q.sample)).hide();
-	$('#showhint').show();
-	
-	$('#star').show().addClass('gray');
-	if (isMarked(mode, q.no)) $('#star').removeClass('gray');
-	
-	$('#next').hide();
-	$('#show').show();
-	if (qi >= 1) $('#back').show(); else $('#back').hide();
-	
-	qi++;
+    if (qi >= ques.length) {
+        $('#mode').change();
+        return;
+    }
+
+    var q = ques[qi];
+    currentQ = q;
+    var isListen = (mode === 'listen');
+
+    var reads1 = '';
+    for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
+    var reads2 = '';
+    if (q.read2) for (var r in q.read2) reads2 += (r == 0 ? '' : ' / ') + '<span>' + q.read2[r] + '</span>';
+
+    $('#no').text(q.no);
+    $('#word').text(q.word);
+    $('#read1').html(reads1);
+    $('#read2').html(reads2);
+    $('#mean').html(toSpans(q.mean));
+    $('#hint').html(toHintSpans(q)).hide();
+    $('#showhint').show();
+
+    if (isListen) {
+        $('#word-row').hide();
+        $('#read').hide();
+        $('#mean').hide();
+        $('#listen-area').show();
+        $('#listen-result').html('');
+        $('#listen-input').val('').prop('disabled', false);
+        $('#listen-submit').prop('disabled', false);
+        setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
+    } else {
+        $('#word-row').show();
+        $('#read').show();
+        $('#mean').show();
+        $('#listen-area').hide();
+        $('#' + mode).addClass('hide');
+    }
+
+    $('#star').show().addClass('gray');
+    if (isMarked(mode, q.no)) $('#star').removeClass('gray');
+
+    $('#next').hide();
+    $('#show').show();
+    if (qi >= 1) $('#back').show(); else $('#back').hide();
+
+    qi++;
 });
 
+// ── Mode change ──────────────────────────────────────────
 $('#mode').change(function() {
-	mode = $('#mode').val();
-	var onlyStarred = mode.substring(0, 4) == 'star';
-	if (onlyStarred) mode = mode.substring(4);
-	
-	ques = [];
-	if (onlyStarred) {
-		var marklist = getMarks(mode, no);
-		if (marklist == null || marklist.length == 0) {
-			$('#no').text('');
-			$('#word').text('');
-			$('#read').removeClass('hide');
-			$('#read1').html('Bô mi̍h-kiānn');
-			$('#read2').html();
-			$('#mean').html('<span>你無已經標示生份的詞。</span><span>若拄著記袂牢的詞，</span><span>會使揤星仔共加入來。</span>').removeClass('hide');
-			$('#hint').html('').hide();
-			$('#showhint').hide();
-			$('#star').hide();
-			$('#next').hide();
-			$('#show').hide();
-			$('#back').hide();
-			return;
-		}
-		for (var i in marklist) ques.push(moe700[qindex[marklist[i]]]);
-	} else {
-		for (var i in moe700) ques.push(moe700[i]);
-	}
-	
-	// shuffle
-	for (var i=0; i<ques.length; i++) {
-		var j = Math.floor(Math.random() * ques.length);
-		if (i == j) continue;
-		var tmp = ques[i];
-		ques[i] = ques[j];
-		ques[j] = tmp;
-	}
-	qi = 0;
-	
-	$('.hide').removeClass('hide');
-	$('#'+mode).addClass('hide');
-	$('#next').click();
+    var raw = $('#mode').val();
+    var onlyStarred = raw.substring(0, 4) === 'star';
+    mode = onlyStarred ? raw.substring(4) : raw;
+
+    ques = [];
+    if (onlyStarred) {
+        var marklist = getMarks(mode);
+        if (marklist == null || marklist.length == 0) {
+            $('#no').text('');
+            $('#word').text('');
+            $('#read').removeClass('hide');
+            $('#read1').html('Bô mi̍h-kiānn');
+            $('#read2').html('');
+            $('#mean').html('<span>你無已經標示生份的詞。</span><span>若拄著記袂牢的詞，</span><span>會使揤星仔共加入來。</span>').removeClass('hide');
+            $('#hint').html('').hide();
+            $('#showhint').hide();
+            $('#star').hide();
+            $('#next').hide();
+            $('#show').hide();
+            $('#back').hide();
+            $('#word-row').show();
+            $('#listen-area').hide();
+            return;
+        }
+        for (var i in marklist) ques.push(moe700[qindex[marklist[i]]]);
+    } else {
+        for (var i in moe700) ques.push(moe700[i]);
+    }
+
+    // shuffle
+    for (var i = 0; i < ques.length; i++) {
+        var j = Math.floor(Math.random() * ques.length);
+        if (i === j) continue;
+        var tmp = ques[i]; ques[i] = ques[j]; ques[j] = tmp;
+    }
+    qi = 0;
+
+    $('.hide').removeClass('hide');
+    if (mode !== 'listen') $('#' + mode).addClass('hide');
+    $('#next').click();
 }).change();
 
 $('#back').click(function() {
-	qi -= 2;
-	$('#next').click();
-	$('#show').click();
+    qi -= 2;
+    $('#next').click();
+    if (mode !== 'listen') $('#show').click();
 });
-
 
 $('#star').click(function() {
-	var val = $(this).hasClass('gray');
-	setMarked(mode, $('#no').text(), val);
-	$(this).toggleClass('gray');
+    var val = $(this).hasClass('gray');
+    setMarked(mode, $('#no').text(), val);
+    $(this).toggleClass('gray');
 });
 
+// ── localStorage helpers ─────────────────────────────────
 function isMarked(mode, no) {
-	var marks = localStorage.getItem('taigi700_' + mode);
-	if (marks == null || marks == '') return false;
-	return marks.match('&' + no + '&');
+    var marks = localStorage.getItem('taigi700_' + mode);
+    if (!marks) return false;
+    return !!marks.match('&' + no + '&');
 }
 
-function getMarks(mode, no) {
-	var marks = localStorage.getItem('taigi700_' + mode);
-	if (marks == null || marks == '' || marks == '&') return null;
-	return marks.replace(/^\&|\&$/g, '').split('&');
+function getMarks(mode) {
+    var marks = localStorage.getItem('taigi700_' + mode);
+    if (!marks || marks === '&') return null;
+    return marks.replace(/^\&|\&$/g, '').split('&');
 }
 
 function setMarked(mode, no, val) {
-	var marks = localStorage.getItem('taigi700_' + mode);
-	if (marks != null && marks != '') marks = marks.replace('&' + no + '&', '&').replace(/\&+/g, '&');
-	if (val) marks = ((marks != null && marks != '' && marks != '&') ? marks : '&') + no + '&';
-	localStorage.setItem('taigi700_' + mode, marks);
+    var marks = localStorage.getItem('taigi700_' + mode) || '';
+    marks = marks.replace('&' + no + '&', '&').replace(/\&+/g, '&');
+    if (val) marks = (marks && marks !== '&' ? marks : '&') + no + '&';
+    localStorage.setItem('taigi700_' + mode, marks);
 }
 
 </script>
-
 </html>
