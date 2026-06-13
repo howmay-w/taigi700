@@ -46,10 +46,12 @@ html { background: var(--navy) }
 body {
   background: var(--beige);
   font-family: 'Huninn', sans-serif;
+  font-synthesis: none;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
 }
+strong, b { font-weight: normal; }
 
 /* ── Header ─────────────────────────────────────────── */
 #header {
@@ -330,7 +332,7 @@ body {
 }
 #listen-input:focus { border-bottom-color: var(--blue) }
 #listen-input:disabled { color: var(--slate) }
-#listen-result { font-size: 20px; font-weight: bold; margin-top: 12px; }
+#listen-result { font-size: 20px; margin-top: 12px; }
 .result-correct { color: #8EB486 }
 .result-wrong   { color: #FF6060 }
 
@@ -1276,6 +1278,7 @@ body {
       <div class="about-lang" id="about-taigi">
         <div class="about-section">
           <p>因為家己 beh 練習，所以整理各位先進 ê 資源、koh 請 Claude 寫 99% 程式碼所創出來 ê 家私，希望會對有仝款需求 ê 逐家有幫贊。</p>
+          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a></p>
         </div>
         <div class="about-section">
           <h2>練習模式</h2>
@@ -1312,9 +1315,9 @@ body {
         </div>
         <div class="about-section">
           <h2>資料來源</h2>
-          <p>詞彙佮音訊來自教育部「<a class="about-link" href="https://language.moe.gov.tw/uploads/files/17576672831025.pdf" target="_blank" rel="noopener">臺灣台語推薦用字 700 字詞</a>」。</p>
-          <p>本站 fork 自 <a class="about-link" href="https://github.com/buttaiwan/buttaiwan.github.io" target="_blank" rel="noopener">buttaiwan/buttaiwan.github.io</a>。</p>
-          <p>音訊整理自 <a class="about-link" href="https://github.com/yiufung/minnan-700" target="_blank" rel="noopener">yiufung/minnan-700</a>。</p>
+          <p>詞彙來自教育部<a class="about-link" href="https://language.moe.gov.tw/uploads/files/17576672831025.pdf" target="_blank" rel="noopener">臺灣台語推薦用字 700 字詞</a></p>
+          <p>本站 fork 自 <a class="about-link" href="https://github.com/buttaiwan/buttaiwan.github.io" target="_blank" rel="noopener">buttaiwan/buttaiwan.github.io</a></p>
+          <p>音訊整理自 <a class="about-link" href="https://github.com/yiufung/minnan-700" target="_blank" rel="noopener">yiufung/minnan-700</a></p>
         </div>
       </div>
 
@@ -1322,6 +1325,7 @@ body {
       <div class="about-lang hide" id="about-zh">
         <div class="about-section">
           <p>因為自己想練習，所以整理前輩們的資源，再請 Claude 寫 99% 程式碼才完成的工具，希望能幫助到有同樣需求的大家。</p>
+          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a></p>
         </div>
         <div class="about-section">
           <h2>練習模式</h2>
@@ -1358,9 +1362,9 @@ body {
         </div>
         <div class="about-section">
           <h2>資料來源</h2>
-          <p>詞彙與音訊來自教育部「<a class="about-link" href="https://language.moe.gov.tw/uploads/files/17576672831025.pdf" target="_blank" rel="noopener">臺灣台語推薦用字 700 字詞</a>」。</p>
-          <p>本站 fork 自 <a class="about-link" href="https://github.com/buttaiwan/buttaiwan.github.io" target="_blank" rel="noopener">buttaiwan/buttaiwan.github.io</a>。</p>
-          <p>音訊整理自 <a class="about-link" href="https://github.com/yiufung/minnan-700" target="_blank" rel="noopener">yiufung/minnan-700</a>。</p>
+          <p>詞彙來自教育部<a class="about-link" href="https://language.moe.gov.tw/uploads/files/17576672831025.pdf" target="_blank" rel="noopener">臺灣台語推薦用字 700 字詞</a></p>
+          <p>本站 fork 自 <a class="about-link" href="https://github.com/buttaiwan/buttaiwan.github.io" target="_blank" rel="noopener">buttaiwan/buttaiwan.github.io</a></p>
+          <p>音訊整理自 <a class="about-link" href="https://github.com/yiufung/minnan-700" target="_blank" rel="noopener">yiufung/minnan-700</a></p>
         </div>
       </div>
 
@@ -1683,11 +1687,13 @@ $('#autoplay-show-toggle').click(function() {
   var isOn = $(this).hasClass('on');
   $(this).toggleClass('on', !isOn);
   saveSetting('autoplay_show', !isOn);
+  if (!isOn && currentQ && answerMode !== 'type') playAudio(wordAudioSrc(currentQ));
 });
 $('#autoplay-type-toggle').click(function() {
   var isOn = $(this).hasClass('on');
   $(this).toggleClass('on', !isOn);
   saveSetting('autoplay_type', !isOn);
+  if (!isOn && currentQ && answerMode === 'type') playAudio(wordAudioSrc(currentQ));
 });
 
 // ── 匯出資料 ──────────────────────────────────────────────
