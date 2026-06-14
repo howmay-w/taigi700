@@ -2160,7 +2160,31 @@ $('#toggle-star').click(function() {
   $('#toggle-star').addClass('active');
   $('#toggle-all').removeClass('active');
   $('#pool-toggle').addClass('right');
-  startMode();
+
+  var marklist = getMarks();
+  if (!marklist || marklist.length === 0) { showEmpty(); return; }
+  var pool = [];
+  for (var i in marklist) pool.push(moe700[qindex[marklist[i]]]);
+
+  var data = getProfData();
+  var groups = [[], [], [], [], []];
+  for (var i = 0; i < pool.length; i++) {
+    var level = scoreToProfLevel(data[pool[i].no] || 0);
+    groups[level].push(pool[i]);
+  }
+  ques = shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
+    .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
+
+  var currentInPool = currentQ && marklist.indexOf(currentQ.no + '') !== -1;
+  if (currentInPool) {
+    ques = ques.filter(function(q) { return q.no !== currentQ.no; });
+    ques.unshift(currentQ);
+    qi = 1;
+    $('#back').addClass('hide');
+  } else {
+    qi = 0;
+    nextQuestion();
+  }
 });
 
 function refreshAnswerMode() {
