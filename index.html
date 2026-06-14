@@ -2362,8 +2362,8 @@ $('#ios-install-overlay, #ios-install-close').click(function() {
 startMode();
 
 // iOS PWA: keep body height synced to visual viewport so bottom-bar
-// stays visible when keyboard opens/closes
-if (window.visualViewport) {
+// stays visible when keyboard opens/closes (only needed in standalone mode)
+if (window.visualViewport && isStandalone) {
   function syncViewportHeight() {
     document.body.style.height = window.visualViewport.height + 'px';
   }
