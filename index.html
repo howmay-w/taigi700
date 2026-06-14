@@ -1662,7 +1662,6 @@ function toHintSpans(q) {
   var res = '';
   for (var i = 0; i < parts.length; i++) {
     var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
-    var playBtn = MISSING_AUDIO[q.no] ? '' : '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>';
     res += '<span class="hint-item">'
          + '<span class="hint-text">' + display + '</span>'
          + '</span>'
