@@ -1561,7 +1561,8 @@ var mode = 'word';
 var answerMode = 'show';
 var onlyStarred = false;
 var currentQ = null;
-var savedQBeforeEmpty = null;
+var savedAllQ = null;   // last card seen in 全部 pool
+var savedStarQ = null;  // last card seen in 收藏 pool
 
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
@@ -1994,19 +1995,7 @@ function startMode() {
     for (var i in moe700) pool.push(moe700[i]);
   }
 
-  // 依熟練等級分組，各組內隨機，低分先出
-  var data = getProfData();
-  var groups = [[], [], [], [], []];
-  for (var i = 0; i < pool.length; i++) {
-    var level = scoreToProfLevel(data[pool[i].no] || 0);
-    groups[level].push(pool[i]);
-  }
-  ques = shuffle(groups[0])
-    .concat(shuffle(groups[1]))
-    .concat(shuffle(groups[2]))
-    .concat(shuffle(groups[3]))
-    .concat(shuffle(groups[4]));
-
+  ques = buildPriorityPool(pool);
   qi = 0;
   nextQuestion();
 }
@@ -2125,6 +2114,17 @@ $('.mode-tab').click(function() {
   refreshAnswerMode();
 });
 
+function buildPriorityPool(pool) {
+  var data = getProfData();
+  var groups = [[], [], [], [], []];
+  for (var i = 0; i < pool.length; i++) {
+    var level = scoreToProfLevel(data[pool[i].no] || 0);
+    groups[level].push(pool[i]);
+  }
+  return shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
+    .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
+}
+
 $('#toggle-all').click(function() {
   if (!onlyStarred) return;
   onlyStarred = false;
@@ -2132,34 +2132,19 @@ $('#toggle-all').click(function() {
   $('#toggle-star').removeClass('active');
   $('#pool-toggle').removeClass('right');
 
-  // 重建完整牌池（依熟練度排序），但保留當前字詞不切換
+  savedStarQ = currentQ;  // save 收藏 position
+
   var pool = [];
   for (var i in moe700) pool.push(moe700[i]);
-  var data = getProfData();
-  var groups = [[], [], [], [], []];
-  for (var i = 0; i < pool.length; i++) {
-    var level = scoreToProfLevel(data[pool[i].no] || 0);
-    groups[level].push(pool[i]);
-  }
-  ques = shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
-    .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
+  ques = buildPriorityPool(pool);
 
-  var restoreQ = currentQ || savedQBeforeEmpty;
-  savedQBeforeEmpty = null;
-  if (restoreQ) {
-    ques = ques.filter(function(q) { return q.no !== restoreQ.no; });
-    ques.unshift(restoreQ);
-    $('#back').addClass('hide');
-    if (currentQ) {
-      qi = 1;
-    } else {
-      qi = 0;
-      nextQuestion();
-    }
-  } else {
-    qi = 0;
-    nextQuestion();
+  if (savedAllQ) {
+    ques = ques.filter(function(q) { return q.no !== savedAllQ.no; });
+    ques.unshift(savedAllQ);
   }
+  qi = 0;
+  $('#back').addClass('hide');
+  nextQuestion();
 });
 
 $('#toggle-star').click(function() {
@@ -2169,30 +2154,21 @@ $('#toggle-star').click(function() {
   $('#toggle-all').removeClass('active');
   $('#pool-toggle').addClass('right');
 
+  savedAllQ = currentQ;  // save 全部 position
+
   var marklist = getMarks();
-  if (!marklist || marklist.length === 0) { savedQBeforeEmpty = currentQ; showEmpty(); return; }
+  if (!marklist || marklist.length === 0) { showEmpty(); return; }
   var pool = [];
   for (var i in marklist) pool.push(moe700[qindex[marklist[i]]]);
+  ques = buildPriorityPool(pool);
 
-  var data = getProfData();
-  var groups = [[], [], [], [], []];
-  for (var i = 0; i < pool.length; i++) {
-    var level = scoreToProfLevel(data[pool[i].no] || 0);
-    groups[level].push(pool[i]);
+  if (savedStarQ && isMarked(savedStarQ.no)) {
+    ques = ques.filter(function(q) { return q.no !== savedStarQ.no; });
+    ques.unshift(savedStarQ);
   }
-  ques = shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
-    .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
-
-  var currentInPool = currentQ && marklist.indexOf(currentQ.no + '') !== -1;
-  if (currentInPool) {
-    ques = ques.filter(function(q) { return q.no !== currentQ.no; });
-    ques.unshift(currentQ);
-    qi = 1;
-    $('#back').addClass('hide');
-  } else {
-    qi = 0;
-    nextQuestion();
-  }
+  qi = 0;
+  $('#back').addClass('hide');
+  nextQuestion();
 });
 
 function refreshAnswerMode() {
