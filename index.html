@@ -1587,7 +1587,7 @@ function playAudio(src) {
 }
 
 function wordAudioSrc(q) {
-  return 'audio/minnan700-' + q.no + '-' + q.word + '.mp3';
+  return 'audio/minnan700-' + q.no + '-' + q.word.replace(/\(.*?\)/g, '') + '.mp3';
 }
 
 function sampleAudioSrc(q, rawItem) {
