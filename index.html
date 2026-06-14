@@ -43,7 +43,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 h1, h2, h3, h4, h5, h6 { font-weight: normal; font-synthesis: none; }
 
-html { background: var(--navy) }
+html { background: var(--navy); height: 100%; overflow: hidden; }
 
 body {
   background: var(--beige);
@@ -2361,15 +2361,6 @@ $('#ios-install-overlay, #ios-install-close').click(function() {
 
 startMode();
 
-// iOS PWA: keep body height synced to visual viewport so bottom-bar
-// stays visible when keyboard opens/closes (only needed in standalone mode)
-if (window.visualViewport && isStandalone) {
-  function syncViewportHeight() {
-    document.body.style.height = window.visualViewport.height + 'px';
-  }
-  window.visualViewport.addEventListener('resize', syncViewportHeight);
-  syncViewportHeight();
-}
 
 </script>
 </body>
