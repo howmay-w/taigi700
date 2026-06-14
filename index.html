@@ -1568,6 +1568,8 @@ var savedStarQ = null;  // last card seen in 收藏 pool
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
 
+var MISSING_AUDIO = { 100: true };
+
 var player = document.getElementById('player');
 
 function playAudio(src) {
@@ -1654,9 +1656,10 @@ function toHintSpans(q) {
   for (var i = 0; i < parts.length; i++) {
     var src = sampleAudioSrc(q, parts[i]);
     var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
+    var playBtn = MISSING_AUDIO[q.no] ? '' : '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>';
     res += '<span class="hint-item">'
          + '<span class="hint-text">' + display + '</span>'
-         + '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>'
+         + playBtn
          + '</span>'
          + (i < parts.length - 1 ? '<span class="hint-sep">、</span>' : '');
   }
@@ -2027,7 +2030,8 @@ function nextQuestion() {
   var q = ques[qi];
   currentQ = q;
   $('#bottom-bar').removeClass('hide');
-  $('#play-word-btn').removeClass('hide');
+  if (MISSING_AUDIO[q.no]) $('#play-word-btn').addClass('hide');
+  else $('#play-word-btn').removeClass('hide');
   $('#empty-kaomoji').addClass('hide');
   $('#star').removeClass('hide');
   $('#knew-btn').addClass('hide');
