@@ -732,6 +732,17 @@ button { user-select: none; -webkit-user-select: none; }
 #overview-grid[data-filter="4"] .word-chip:not([data-plevel="4"]) { display: none; }
 #overview-grid[data-filter="star"] .word-chip:not([data-starred="1"]) { display: none; }
 
+/* 編號：左上角 */
+.chip-no {
+  position: absolute;
+  top: 3px; left: 4px;
+  font-size: 8px;
+  line-height: 1;
+  color: rgba(17,24,68,0.35);
+  pointer-events: none;
+  font-family: monospace;
+}
+
 /* 收藏標示：右上角小橘點 */
 .word-chip { position: relative; }
 .word-chip[data-starred="1"]::after {
@@ -1915,6 +1926,7 @@ function renderOverview() {
       : (visLen <= 4 ? '11px' : visLen <= 7 ? '10px' : visLen <= 10 ? '9px' : '8px');
     html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '"'
           + (starred ? ' data-starred="1"' : '') + '>'
+          + '<span class="chip-no">' + q.no + '</span>'
           + '<span class="chip-hanzi">' + displayWord + '</span>'
           + '<span class="chip-read" style="font-size:' + readSize + '">' + displayRead + '</span>'
           + '</button>';
