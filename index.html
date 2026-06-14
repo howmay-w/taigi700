@@ -1561,6 +1561,7 @@ var mode = 'word';
 var answerMode = 'show';
 var onlyStarred = false;
 var currentQ = null;
+var savedQBeforeEmpty = null;
 
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
@@ -2143,11 +2144,18 @@ $('#toggle-all').click(function() {
   ques = shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
     .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
 
-  if (currentQ) {
-    ques = ques.filter(function(q) { return q.no !== currentQ.no; });
-    ques.unshift(currentQ);
-    qi = 1;
+  var restoreQ = currentQ || savedQBeforeEmpty;
+  savedQBeforeEmpty = null;
+  if (restoreQ) {
+    ques = ques.filter(function(q) { return q.no !== restoreQ.no; });
+    ques.unshift(restoreQ);
     $('#back').addClass('hide');
+    if (currentQ) {
+      qi = 1;
+    } else {
+      qi = 0;
+      nextQuestion();
+    }
   } else {
     qi = 0;
     nextQuestion();
@@ -2162,7 +2170,7 @@ $('#toggle-star').click(function() {
   $('#pool-toggle').addClass('right');
 
   var marklist = getMarks();
-  if (!marklist || marklist.length === 0) { showEmpty(); return; }
+  if (!marklist || marklist.length === 0) { savedQBeforeEmpty = currentQ; showEmpty(); return; }
   var pool = [];
   for (var i in marklist) pool.push(moe700[qindex[marklist[i]]]);
 
