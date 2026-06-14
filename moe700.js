@@ -312,7 +312,7 @@ var moe700 = [
     "read2": [
       "bāng-lē"
     ],
-    "audioId": "30001(1)"
+    "audioId": "custom/1"
   },
   {
     "no": 30,
@@ -1094,7 +1094,7 @@ var moe700 = [
     ],
     "mean": "那裡的",
     "sample": "～人",
-    "audioId": "10193(1)"
+    "audioId": "custom/6"
   },
   {
     "no": 101,
@@ -1144,7 +1144,7 @@ var moe700 = [
     ],
     "mean": "呈現、現出",
     "sample": "～原形",
-    "audioId": "30002(1)"
+    "audioId": "custom/2"
   },
   {
     "no": 106,
@@ -2239,7 +2239,7 @@ var moe700 = [
     "read2": [
       "ka-tshiùnn"
     ],
-    "audioId": "30003(1)"
+    "audioId": "custom/3"
   },
   {
     "no": 203,
@@ -6276,7 +6276,7 @@ var moe700 = [
       "tōo-ún",
       "tōo-kín"
     ],
-    "audioId": "30004(1)"
+    "audioId": "custom/4"
   },
   {
     "no": 574,
@@ -7078,7 +7078,7 @@ var moe700 = [
     ],
     "mean": "這裡的",
     "sample": "～人",
-    "audioId": "11493(1)"
+    "audioId": "custom/5"
   },
   {
     "no": 648,
