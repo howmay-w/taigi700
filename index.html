@@ -52,7 +52,8 @@ body {
   touch-action: manipulation;
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
 }
 strong, b { font-weight: normal; }
 button { user-select: none; -webkit-user-select: none; }
@@ -252,7 +253,7 @@ button { user-select: none; -webkit-user-select: none; }
 
 #mean {
   font-family: 'Huninn', sans-serif;
-  font-size: 22px;
+  font-size: 19px;
   line-height: 1.5;
   color: var(--navy);
   text-align: center;
@@ -273,7 +274,7 @@ button { user-select: none; -webkit-user-select: none; }
 .masked * { color: transparent !important }
 #read.masked { color: transparent !important }
 
-#hint-area { width: 100%; min-height: 52px; }
+#hint-area { width: 100%; min-height: 52px; margin-top: -8px; }
 #hint {
   font-family: 'Iansui', sans-serif;
   font-size: 22px;
@@ -342,9 +343,6 @@ button { user-select: none; -webkit-user-select: none; }
 
 /* ── 底部操作列 ───────────────────────────────────────── */
 #bottom-bar {
-  position: sticky;
-  bottom: 0;
-  left: 0; right: 0;
   background: #fff;
   border-top: 1px solid var(--stone);
   display: flex;
@@ -483,9 +481,9 @@ button { user-select: none; -webkit-user-select: none; }
   #read { min-height: 44px; }
   #read1 { font-size: 34px; }
   #read2 { font-size: 18px; min-height: calc(18px * 1.4); }
-  #mean { font-size: 18px; min-height: 36px; }
+  #mean { font-size: 16px; min-height: 30px; }
   #hint { font-size: 18px; line-height: 2; }
-  #hint-area { min-height: 40px; }
+  #hint-area { min-height: 36px; margin-top: -6px; }
   #listen-area { margin-top: 6px; }
   #listen-card { padding: 14px 16px 12px; }
   #listen-input { font-size: 19px; }
