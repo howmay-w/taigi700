@@ -50,11 +50,10 @@ body {
   font-family: 'Huninn', sans-serif;
   font-synthesis: none;
   touch-action: manipulation;
-  overscroll-behavior: none;
   display: flex;
   flex-direction: column;
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;
+}
 }
 strong, b { font-weight: normal; }
 button { user-select: none; -webkit-user-select: none; }
@@ -344,6 +343,8 @@ button { user-select: none; -webkit-user-select: none; }
 
 /* ── 底部操作列 ───────────────────────────────────────── */
 #bottom-bar {
+  position: sticky;
+  bottom: 0;
   background: #fff;
   border-top: 1px solid var(--stone);
   display: flex;
@@ -2276,13 +2277,6 @@ $('#listen-input').on('input', function() {
 });
 $('#listen-input').on('keydown', function(e) {
   if (e.key === 'Enter' && !$('#show').prop('disabled')) $('#show').click();
-});
-// iOS: after keyboard closes, scroll positions can get stuck; reset them
-$('#listen-input').on('blur', function() {
-  setTimeout(function() {
-    window.scrollTo(0, 0);
-    document.getElementById('main').scrollTop = 0;
-  }, 100);
 });
 
 // Enter 鍵快速操作（輸入框以外）
