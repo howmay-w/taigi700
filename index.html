@@ -483,17 +483,14 @@ for (var i in moe700) qindex[moe700[i].no + ''] = i;
 var player = document.getElementById('player');
 
 function playAudio(src) {
+  if (!src) return;
   player.src = src;
   player.play().catch(function() {});
 }
 
 function wordAudioSrc(q) {
-  return 'audio/minnan700-' + q.no + '-' + q.word + '.mp3';
-}
-
-function sampleAudioSrc(q, rawItem) {
-  var wordBase = q.word.replace(/\(.*?\)/g, '');
-  return 'audio/minnan700-' + q.no + '-' + rawItem.replace(/～/g, wordBase) + '.mp3';
+  if (!q.audioId) return null;
+  return 'https://static.kiantiong.com/sutiau/' + q.audioId + '.mp3';
 }
 
 // 聲調符號 → 數字對應表
@@ -582,11 +579,9 @@ function toHintSpans(q) {
   var parts = q.sample.split(/、/);
   var res = '';
   for (var i = 0; i < parts.length; i++) {
-    var src = sampleAudioSrc(q, parts[i]);
     var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
     res += '<span class="hint-item">'
          + '<span class="hint-text">' + display + '</span>'
-         + '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>'
          + '</span>'
          + (i < parts.length - 1 ? '<span class="hint-sep">、</span>' : '');
   }
@@ -660,7 +655,7 @@ function nextQuestion() {
   var q = ques[qi];
   currentQ = q;
   $('#bottom-bar').removeClass('hide');
-  $('#play-word-btn').removeClass('hide');
+  if (q.audioId) $('#play-word-btn').removeClass('hide'); else $('#play-word-btn').addClass('hide');
   $('#empty-kaomoji').addClass('hide');
   $('#star').removeClass('hide');
 
@@ -792,9 +787,6 @@ $('#play-word-btn').click(function() {
   if (currentQ) playAudio(wordAudioSrc(currentQ));
 });
 
-$(document).on('click', '.hint-play', function() {
-  playAudio($(this).data('src'));
-});
 
 $('#show').click(function() {
   var isType = (answerMode === 'type') && (mode !== 'mean');
