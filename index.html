@@ -43,13 +43,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 h1, h2, h3, h4, h5, h6 { font-weight: normal; font-synthesis: none; }
 
-html { background: var(--navy); height: 100%; overflow: hidden; }
+html { background: var(--navy); overscroll-behavior: none; }
 
 body {
   background: var(--beige);
   font-family: 'Huninn', sans-serif;
   font-synthesis: none;
   touch-action: manipulation;
+  overscroll-behavior: none;
   display: flex;
   flex-direction: column;
   height: 100dvh;
@@ -2275,6 +2276,13 @@ $('#listen-input').on('input', function() {
 });
 $('#listen-input').on('keydown', function(e) {
   if (e.key === 'Enter' && !$('#show').prop('disabled')) $('#show').click();
+});
+// iOS: after keyboard closes, scroll positions can get stuck; reset them
+$('#listen-input').on('blur', function() {
+  setTimeout(function() {
+    window.scrollTo(0, 0);
+    document.getElementById('main').scrollTop = 0;
+  }, 100);
 });
 
 // Enter 鍵快速操作（輸入框以外）
