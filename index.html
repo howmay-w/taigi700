@@ -2188,6 +2188,7 @@ $('#toggle-star').click(function() {
 
 function refreshAnswerMode() {
   if (!currentQ) { startMode(); return; }
+  if (currentQ.sample) $('#hint').html(toHintSpans(currentQ));
   $('#knew-btn').addClass('hide');
   $('#unknown-btn').addClass('hide');
   var isType = (answerMode === 'type') && (mode !== 'mean');
@@ -2359,6 +2360,16 @@ $('#ios-install-overlay, #ios-install-close').click(function() {
 });
 
 startMode();
+
+// iOS PWA: keep body height synced to visual viewport so bottom-bar
+// stays visible when keyboard opens/closes
+if (window.visualViewport) {
+  function syncViewportHeight() {
+    document.body.style.height = window.visualViewport.height + 'px';
+  }
+  window.visualViewport.addEventListener('resize', syncViewportHeight);
+  syncViewportHeight();
+}
 
 </script>
 </body>
