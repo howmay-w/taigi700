@@ -1,7 +1,7 @@
 {
-  "name": "教育部700台語練習",
-  "short_name": "台語700",
-  "description": "教育部700建議用字台語練習",
+  "name": "台語 700 單字卡",
+  "short_name": "台語 700",
+  "description": "教育部臺灣台語推薦用字 700 字詞練習",
   "start_url": "/taigi700/",
   "scope": "/taigi700/",
   "display": "standalone",

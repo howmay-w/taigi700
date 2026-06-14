@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-tw" lang="zh-tw">
 <head>
-<title>教育部700建議用字練習</title>
+<title>台語 700 單字卡</title>
 <meta charset="utf-8">
 <meta name="theme-color" content="#111844">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -9,7 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,16 +41,22 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; font-synthesis: none; }
 
-html { background: var(--navy) }
+html { background: var(--navy); overscroll-behavior: none; }
 
 body {
   background: var(--beige);
   font-family: 'Huninn', sans-serif;
+  font-synthesis: none;
+  touch-action: manipulation;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
 }
+}
+strong, b { font-weight: normal; }
+button { user-select: none; -webkit-user-select: none; }
 
 /* ── Header ─────────────────────────────────────────── */
 #header {
@@ -57,6 +65,34 @@ body {
   padding-top: calc(12px + env(safe-area-inset-top));
   flex-shrink: 0;
 }
+
+#header-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 4px 0;
+}
+#header-title {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.5px;
+}
+#menu-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.65);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  border-radius: 6px;
+  outline: none;
+  transition: color 0.15s, background 0.15s;
+}
+#menu-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+#menu-btn:focus-visible { outline: 2px solid rgba(255,255,255,0.5); }
 
 #mode-tabs {
   display: flex;
@@ -143,11 +179,32 @@ body {
   gap: 16px;
 }
 
+#card-toprow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 #no {
   font-size: 13px;
   color: var(--slate);
-  align-self: flex-start;
 }
+#dict-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Huninn', sans-serif;
+  font-size: 11px;
+  color: var(--slate);
+  text-decoration: none;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+#dict-btn:hover { color: var(--blue); }
 
 #word {
   font-family: 'Iansui', sans-serif;
@@ -196,7 +253,7 @@ body {
 
 #mean {
   font-family: 'Huninn', sans-serif;
-  font-size: 22px;
+  font-size: 19px;
   line-height: 1.5;
   color: var(--navy);
   text-align: center;
@@ -217,7 +274,7 @@ body {
 .masked * { color: transparent !important }
 #read.masked { color: transparent !important }
 
-#hint-area { width: 100%; min-height: 52px; }
+#hint-area { width: 100%; min-height: 52px; margin-top: -8px; }
 #hint {
   font-family: 'Iansui', sans-serif;
   font-size: 22px;
@@ -241,6 +298,8 @@ body {
   cursor: pointer;
   font-size: 12px;
   vertical-align: middle;
+  position: relative;
+  top: -1px;
   margin-left: 4px;
   line-height: 1;
   opacity: 0.85;
@@ -277,8 +336,8 @@ body {
   outline: none;
 }
 #listen-input:focus { border-bottom-color: var(--blue) }
-#listen-input:disabled { color: var(--slate) }
-#listen-result { font-size: 20px; font-weight: bold; margin-top: 12px; }
+#listen-input:disabled { color: rgba(17,24,68,0.75); opacity: 1; -webkit-text-fill-color: rgba(17,24,68,0.75); }
+#listen-result { font-size: 20px; margin-top: 12px; }
 .result-correct { color: #8EB486 }
 .result-wrong   { color: #FF6060 }
 
@@ -286,7 +345,6 @@ body {
 #bottom-bar {
   position: sticky;
   bottom: 0;
-  left: 0; right: 0;
   background: #fff;
   border-top: 1px solid var(--stone);
   display: flex;
@@ -343,7 +401,7 @@ body {
   cursor: pointer;
 }
 #show:hover { background: var(--navy) }
-#show:disabled { background: var(--stone); color: var(--slate); cursor: default; }
+#show:disabled { opacity: 0.35; cursor: default; }
 
 #next {
   flex: 1;
@@ -358,12 +416,46 @@ body {
 }
 #next:hover { background: #060c22 }
 
+/* ── 自評按鈕 ─────────────────────────────────────────── */
+#knew-btn {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #8EB486;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#knew-btn:hover { background: #7aa372; }
+#unknown-btn {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #FF6060;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#unknown-btn:hover { background: #e85050; }
+
 .toast {
   position: fixed;
-  bottom: 110px;
+  bottom: 132px;
   left: 50%;
   transform: translateX(-50%) translateY(12px);
-  background: rgba(17,24,68,0.88);
+  background: rgba(90, 110, 150, 0.92);
   color: #fff;
   font-family: 'Huninn', sans-serif;
   font-size: 15px;
@@ -381,6 +473,7 @@ body {
 
 @media (max-height: 700px) {
   #header { padding: 8px 12px 8px; padding-top: calc(8px + env(safe-area-inset-top)); }
+  #header-title-row { margin-bottom: 4px; }
   #mode-tabs { margin-bottom: 6px; }
   .mode-tab { padding: 7px 2px; font-size: 13px; }
   .tgl { padding: 4px 0; font-size: 13px; }
@@ -390,33 +483,738 @@ body {
   #read { min-height: 44px; }
   #read1 { font-size: 34px; }
   #read2 { font-size: 18px; min-height: calc(18px * 1.4); }
-  #mean { font-size: 18px; min-height: 36px; }
+  #mean { font-size: 16px; min-height: 30px; }
   #hint { font-size: 18px; line-height: 2; }
-  #hint-area { min-height: 40px; }
+  #hint-area { min-height: 36px; margin-top: -6px; }
   #listen-area { margin-top: 6px; }
   #listen-card { padding: 14px 16px 12px; }
   #listen-input { font-size: 19px; }
   #bottom-bar { padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
   #bottom-bar > button { height: 42px; }
 }
+
+/* ── 漢堡選單 ─────────────────────────────────────────── */
+#menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+}
+#menu-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 210px;
+  background: var(--navy);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px 20px;
+  padding-top: calc(16px + env(safe-area-inset-top));
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#menu-drawer.open { transform: translateX(0); }
+#menu-close {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  line-height: 1;
+  outline: none;
+}
+#menu-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+#menu-close:focus-visible { outline: 2px solid rgba(255,255,255,0.7); }
+.menu-item {
+  font-family: 'Huninn', sans-serif;
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+  padding: 14px 8px;
+  cursor: pointer;
+  border-radius: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.15s, background 0.15s;
+  outline: none;
+}
+.menu-item:hover { color: #fff; background: rgba(255,255,255,0.07); border-radius: 8px; }
+.menu-item:focus-visible { outline: 2px solid rgba(255,255,255,0.7); outline-offset: -3px; border-radius: 8px; }
+#menu-close:focus-visible { outline: 2px solid rgba(255,255,255,0.7); }
+.menu-item svg { flex-shrink: 0; opacity: 0.7; }
+.menu-divider {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin: 8px 0;
+}
+.menu-item-danger {
+  color: rgba(255,120,120,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.menu-item-danger:hover { color: #FF6060; background: rgba(255,96,96,0.1); }
+.menu-item-danger svg { opacity: 1; }
+
+/* ── 重置確認 modal ───────────────────────────────────── */
+#reset-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+#reset-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+#reset-dialog {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px 20px;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+#reset-dialog h3 {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+#reset-dialog p {
+  font-family: 'Huninn', sans-serif;
+  font-size: 14px;
+  color: var(--slate);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+#reset-dialog .reset-warn {
+  color: #d94040;
+  font-size: 13px;
+  margin-top: -8px;
+}
+.reset-btns {
+  display: flex;
+  gap: 8px;
+}
+#reset-cancel {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  background: var(--stone);
+  color: var(--navy);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#reset-cancel:hover { background: var(--beige); }
+#reset-confirm {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  background: #FF6060;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#reset-confirm:hover { background: #e85050; }
+
+/* ── 頁面 overlay ─────────────────────────────────────── */
+.page {
+  position: fixed;
+  inset: 0;
+  background: var(--beige);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.page-header {
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  padding-top: calc(14px + env(safe-area-inset-top));
+  flex-shrink: 0;
+}
+.page-back {
+  background: none;
+  border: none;
+  color: var(--slate);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.page-back:hover { color: var(--beige); background: rgba(255,255,255,0.08); }
+.page-title {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: #fff;
+  flex: 1;
+}
+.page-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+/* ── 總覽頁 ───────────────────────────────────────────── */
+#overview-stats-inline {
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+}
+#overview-filter {
+  display: flex;
+  gap: 6px;
+  padding: 10px 10px 6px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  background: var(--beige);
+}
+#overview-filter::-webkit-scrollbar { display: none; }
+.filter-btn {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 14px;
+  border: 1.5px solid var(--stone);
+  background: #fff;
+  color: var(--slate);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s, outline 0.15s;
+}
+/* 全部 */
+.filter-btn[data-level="all"].active { background: var(--blue); color: #fff; border-color: var(--blue); }
+/* 各熟練等級按鈕：平時半透明，active 全亮＋外框 */
+.filter-btn[data-level="0"] { background: #fff; border-color: transparent; color: var(--navy); opacity: 0.55; }
+.filter-btn[data-level="1"] { background: #bfcfe8; border-color: #bfcfe8; color: var(--navy); opacity: 0.55; }
+.filter-btn[data-level="2"] { background: var(--slate); border-color: var(--slate); color: #fff; opacity: 0.55; }
+.filter-btn[data-level="3"] { background: var(--blue); border-color: var(--blue); color: #fff; opacity: 0.55; }
+.filter-btn[data-level="4"] { background: var(--navy); border-color: var(--navy); color: #fff; opacity: 0.55; }
+.filter-btn[data-level]:not([data-level="all"]).active { opacity: 1; outline: 2.5px solid rgba(17,24,68,0.35); outline-offset: 2px; }
+.filter-btn-star { background: rgba(250,185,91,0.22); border-color: transparent; color: #9a6700; opacity: 1; }
+.filter-btn-star.active { background: var(--amber); color: #fff; border-color: transparent; outline-color: rgba(250,185,91,0.5); }
+
+#overview-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  padding: 6px 10px 12px;
+}
+
+/* CSS-based filter */
+#overview-grid[data-filter="0"] .word-chip:not([data-plevel="0"]) { display: none; }
+#overview-grid[data-filter="1"] .word-chip:not([data-plevel="1"]) { display: none; }
+#overview-grid[data-filter="2"] .word-chip:not([data-plevel="2"]) { display: none; }
+#overview-grid[data-filter="3"] .word-chip:not([data-plevel="3"]) { display: none; }
+#overview-grid[data-filter="4"] .word-chip:not([data-plevel="4"]) { display: none; }
+#overview-grid[data-filter="star"] .word-chip:not([data-starred="1"]) { display: none; }
+
+/* 編號：左上角 */
+.chip-no {
+  position: absolute;
+  top: 3px; left: 4px;
+  font-size: 7px;
+  line-height: 1;
+  color: rgba(17,24,68,0.2);
+  pointer-events: none;
+  font-family: monospace;
+}
+
+/* 收藏標示：右上角小橘點 */
+.word-chip { position: relative; }
+.word-chip[data-starred="1"]::after {
+  content: '★';
+  position: absolute;
+  top: 5px; right: 6px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--amber);
+  pointer-events: none;
+}
+
+.word-chip {
+  border-radius: 8px;
+  padding: 5px 3px 6px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 58px;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  transition: opacity 0.12s, transform 0.1s;
+}
+.word-chip:hover { opacity: 0.78; transform: scale(0.96); }
+.chip-hanzi {
+  font-family: 'Iansui', sans-serif;
+  font-size: 15px;
+  line-height: 1.2;
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  padding: 0 2px;
+}
+.chip-read {
+  font-family: NunitoPOJ, sans-serif;
+  font-size: 10px;
+  line-height: 1.2;
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  padding: 0 2px;
+}
+/* 熟練度顏色 */
+.plv-0 { background: #fff; color: var(--navy); }
+.plv-1 { background: #bfcfe8; color: var(--navy); }
+.plv-2 { background: var(--slate); color: #fff; }
+.plv-3 { background: var(--blue); color: #fff; }
+.plv-4 { background: var(--navy); color: #fff; }
+
+/* ── 介紹頁語言切換 ──────────────────────────────────── */
+#about-lang-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 3px;
+  gap: 2px;
+  margin-left: auto;
+}
+.alang-btn {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  padding: 4px 11px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.alang-btn.active { background: rgba(255,255,255,0.22); color: #fff; }
+
+/* ── 介紹頁 ───────────────────────────────────────────── */
+#about-content {
+  padding: 0 20px 40px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.about-section {
+  padding: 22px 0 20px;
+  border-bottom: 1.5px solid #fff;
+}
+.about-section:last-child { border-bottom: none; }
+#about-content h2 {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: var(--navy);
+  margin: 0 0 12px;
+}
+#about-content p {
+  font-family: 'Huninn', sans-serif;
+  font-size: 15.5px;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.about-mode-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+.about-tag {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 9px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.about-tag.green { background: #5a9e54; }
+.score-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.score-badge {
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  background: #fff;
+  border: 1.5px solid var(--stone);
+  border-radius: 8px;
+  padding: 5px 12px;
+  color: var(--navy);
+}
+.score-badge strong { color: var(--blue); }
+.prof-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.prof-badge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  color: #555;
+}
+.prof-dot {
+  width: 28px; height: 18px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.about-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.about-list li {
+  font-family: 'Huninn', sans-serif;
+  font-size: 15.5px;
+  color: #555;
+  line-height: 1.5;
+}
+.about-list li strong { color: var(--navy); }
+.about-list.compact { margin: 10px 0 14px; }
+
+/* ── 電腦版橫列導覽 ──────────────────────────────────── */
+#desktop-nav {
+  display: none;
+  gap: 4px;
+  margin-left: auto;
+}
+.desktop-nav-btn {
+  font-family: 'Huninn', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  outline: none;
+}
+.desktop-nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.desktop-nav-btn:focus-visible { outline: 2px solid rgba(255,255,255,0.5); }
+
+@media (min-width: 640px) {
+  #menu-btn { display: none; }
+  #desktop-nav { display: flex; }
+  .chip-hanzi { font-size: 28px; line-height: 1.3; }
+  .word-chip { min-height: 92px; padding: 10px 4px 12px; border-radius: 10px; }
+}
+
+.about-link {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(75,86,148,0.4);
+}
+.about-link:hover { text-decoration-color: var(--blue); }
+
+/* ── 設定頁 ───────────────────────────────────────────── */
+#settings-content {
+  padding: 0 16px 40px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.settings-section {
+  padding: 20px 0 8px;
+  border-bottom: 1.5px solid var(--stone);
+}
+.settings-section:last-child { border-bottom: none; }
+.settings-section-title {
+  font-family: 'Huninn', sans-serif;
+  font-size: 11.5px;
+  color: var(--slate);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 4px;
+  gap: 16px;
+}
+.settings-row + .settings-row { border-top: 1px solid var(--stone); }
+.settings-row-label { flex: 1; }
+.settings-row-label span {
+  font-family: 'Huninn', sans-serif;
+  font-size: 15.5px;
+  color: var(--navy);
+  display: block;
+}
+.settings-row-label small {
+  font-family: 'Huninn', sans-serif;
+  font-size: 12px;
+  color: var(--slate);
+  margin-top: 2px;
+  display: block;
+}
+/* iOS-style toggle */
+.ios-toggle {
+  width: 44px;
+  height: 26px;
+  border-radius: 13px;
+  background: #ccc;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  outline: none;
+}
+.ios-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.2s;
+}
+.ios-toggle.on { background: var(--blue); }
+.ios-toggle.on::after { transform: translateX(18px); }
+.ios-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+/* Settings action list */
+.settings-action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0 12px;
+}
+.settings-action-btn {
+  width: 100%;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15.5px;
+  padding: 13px 14px;
+  background: #fff;
+  color: var(--navy);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s;
+  box-shadow: 0 1px 4px rgba(17,24,68,0.06);
+}
+.settings-action-btn:hover { background: var(--stone); }
+.settings-action-btn svg { color: var(--slate); flex-shrink: 0; }
+.settings-action-btn.danger { color: #d94040; }
+.settings-action-btn.danger svg { color: #d94040; }
+.settings-action-btn.danger:hover { background: #fff0f0; }
+
+/* ── iOS 安裝引導 modal ──────────────────────────────── */
+#ios-install-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 calc(16px + env(safe-area-inset-bottom));
+}
+#ios-install-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+#ios-install-dialog {
+  position: relative;
+  background: #fff;
+  border-radius: 20px 20px 16px 16px;
+  padding: 24px 24px 20px;
+  max-width: 380px;
+  width: calc(100% - 32px);
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.15);
+}
+#ios-install-dialog h3 {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+.ios-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-family: 'Huninn', sans-serif;
+  font-size: 14.5px;
+  color: #555;
+  line-height: 1.5;
+}
+.ios-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.ios-share-icon {
+  display: inline-block;
+  vertical-align: -3px;
+  margin: 0 2px;
+}
+#ios-install-close {
+  margin-top: 16px;
+  width: 100%;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  padding: 12px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#ios-install-close:hover { background: var(--navy); }
+
+/* ── 匯入確認 modal ───────────────────────────────────── */
+#import-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+#import-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+#import-dialog {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px 20px;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+#import-dialog h3 {
+  font-family: 'Huninn', sans-serif;
+  font-size: 17px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+#import-dialog p {
+  font-family: 'Huninn', sans-serif;
+  font-size: 14px;
+  color: var(--slate);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+#import-detail {
+  font-family: 'Huninn', sans-serif;
+  font-size: 13px;
+  color: var(--blue);
+  margin-bottom: 20px;
+  display: block;
+}
+.import-btns { display: flex; gap: 8px; }
+#import-cancel {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  background: var(--stone);
+  color: var(--navy);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#import-cancel:hover { background: var(--beige); }
+#import-confirm {
+  flex: 1;
+  font-family: 'Huninn', sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#import-confirm:hover { background: var(--navy); }
 </style>
 </head>
 <body>
 
 <div id="header">
+  <div id="header-title-row">
+    <span id="header-title">台語 700 單字卡</span>
+    <div id="desktop-nav">
+      <button class="desktop-nav-btn" id="desktop-goto-overview">字卡總覽</button>
+      <button class="desktop-nav-btn" id="desktop-goto-about">介紹</button>
+      <button class="desktop-nav-btn" id="desktop-goto-settings">資料佮設定</button>
+    </div>
+    <button id="menu-btn" aria-label="選單">&#9776;</button>
+  </div>
   <div id="mode-tabs">
     <button class="mode-tab active" data-mode="word">漢字</button>
     <button class="mode-tab" data-mode="read">台羅</button>
-    <button class="mode-tab" data-mode="mean">華語解釋</button>
+    <button class="mode-tab" data-mode="mean">華語解說</button>
   </div>
   <div id="mode-toggles">
     <div class="tgl-group" id="pool-toggle">
       <button class="tgl active" id="toggle-all">全部</button>
-      <button class="tgl" id="toggle-star">生份<svg viewBox="0 0 24 24" width="12" height="12" style="fill:#bbb;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button>
+      <button class="tgl" id="toggle-star"><svg viewBox="0 0 24 24" width="12" height="12" style="fill:#bbb;flex-shrink:0"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>收藏</button>
       <div class="tgl-indicator"></div>
     </div>
     <div class="tgl-group" id="answer-toggle">
-      <button class="tgl active" id="toggle-show">顯示</button>
+      <button class="tgl active" id="toggle-show">字卡</button>
       <button class="tgl" id="toggle-type">拍字</button>
       <div class="tgl-indicator"></div>
     </div>
@@ -425,7 +1223,15 @@ body {
 
 <div id="main">
   <div id="card">
-    <span id="no"></span>
+    <div id="card-toprow">
+      <span id="no"></span>
+      <a id="dict-btn" href="#" target="_blank" rel="noopener" title="教育部臺灣閩南語常用詞辭典">
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 3h4v4M11 9l6-6M9 5H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/>
+        </svg>
+        辭典
+      </a>
+    </div>
     <span id="word"></span>
     <div id="read">
       <div id="read1"></div>
@@ -460,9 +1266,300 @@ body {
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
     </svg>
   </button>
-  <button id="show">對答案</button>
+  <button id="show">看答案</button>
   <button id="next" class="hide">後一條</button>
+  <button id="knew-btn" class="hide">
+    <svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="2,9 7,14 16,4"/>
+    </svg>
+    熟手
+  </button>
+  <button id="unknown-btn" class="hide">
+    <svg viewBox="0 0 18 18" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <line x1="3.5" y1="3.5" x2="14.5" y2="14.5"/>
+      <line x1="14.5" y1="3.5" x2="3.5" y2="14.5"/>
+    </svg>
+    無熟手
+  </button>
 </div>
+
+<!-- 漢堡選單 -->
+<div id="menu-overlay" class="hide"></div>
+<div id="menu-drawer">
+  <button id="menu-close">✕</button>
+  <button class="menu-item" id="goto-overview">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+    </svg>
+    字卡總覽
+  </button>
+  <button class="menu-item" id="goto-about">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    介紹
+  </button>
+  <button class="menu-item" id="goto-settings">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    資料佮設定
+  </button>
+  <button class="menu-item hide" id="install-pwa-btn">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2v13M8 11l4 4 4-4"/>
+      <path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/>
+    </svg>
+    安裝 App
+  </button>
+</div>
+
+<!-- 重置確認 modal -->
+<div id="reset-modal" class="hide">
+  <div id="reset-modal-overlay"></div>
+  <div id="reset-dialog">
+    <h3>學習記錄重設定</h3>
+    <p>你敢確定有影欲共所有詞彙的學習進度刣掉？</p>
+    <p class="reset-warn">這个操作袂當重來</p>
+    <div class="reset-btns">
+      <button id="reset-cancel">取消</button>
+      <button id="reset-confirm">確定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 總覽頁 -->
+<div id="overview-page" class="page hide">
+  <div class="page-header">
+    <button class="page-back" id="overview-back">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="page-title">字卡總覽</span>
+    <span id="overview-stats-inline"></span>
+  </div>
+  <div id="overview-filter">
+    <button class="filter-btn active" data-level="all">全部</button>
+    <button class="filter-btn" data-level="0">未學</button>
+    <button class="filter-btn" data-level="1">接觸過</button>
+    <button class="filter-btn" data-level="2">學習中</button>
+    <button class="filter-btn" data-level="3">熟練</button>
+    <button class="filter-btn" data-level="4">精通</button>
+    <button class="filter-btn filter-btn-star" data-level="star">★ 收藏</button>
+  </div>
+  <div class="page-body">
+    <div id="overview-grid"></div>
+  </div>
+</div>
+
+<!-- 介紹頁 -->
+<div id="about-page" class="page hide">
+  <div class="page-header">
+    <button class="page-back" id="about-back">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="page-title">介紹</span>
+    <div id="about-lang-toggle">
+      <button class="alang-btn active" data-lang="taigi">台語</button>
+      <button class="alang-btn" data-lang="zh">華語</button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div id="about-content">
+
+      <!-- 台語版 (預設顯示) -->
+      <div class="about-lang" id="about-taigi">
+        <div class="about-section">
+          <p>因為家己 beh 練習，所以整理各位先進 ê 資源、koh 請 Claude 寫 99% 程式碼所創出來 ê 家私，希望會對有仝款需求 ê 逐家有幫贊。</p>
+          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a>／顧問：<a class="about-link" href="https://kiantiong.com" target="_blank" rel="noopener">建中</a></p>
+        </div>
+        <div class="about-section">
+          <h2>練習模式</h2>
+          <ul class="about-list">
+            <li><strong>漢字</strong>：共漢字崁起來，看台羅佮解說</li>
+            <li><strong>台羅</strong>：共台羅崁起來，看漢字佮解說</li>
+            <li><strong>解說</strong>：共解說崁起來，看漢字佮台羅</li>
+          </ul>
+        </div>
+        <div class="about-section">
+          <h2>回答模式</h2>
+          <ul class="about-list">
+            <li><strong>字卡</strong>：揤「看答案」家己評估敢有熟手</li>
+            <li><strong>拍字</strong>：用齒盤輸入答案</li>
+          </ul>
+        </div>
+        <div class="about-section">
+          <h2>熟手分數</h2>
+          <p>逐个詞有獨立的熟手分數，照下跤的規則計算：</p>
+          <ul class="about-list compact">
+            <li>字卡揤「熟手」<strong>+2</strong></li>
+            <li>字卡揤「無熟手」<strong>+1</strong></li>
+            <li>拍字回答正確 <strong>+3</strong></li>
+            <li>拍字回答錯誤 <strong>+0</strong></li>
+          </ul>
+          <p>字詞會照分數累積升級：</p>
+          <div class="prof-legend">
+            <div class="prof-badge"><div class="prof-dot" style="background:#fff;border:1px solid var(--stone)"></div>未學（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸（1–5 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習（6–15 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟手（16–30 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--navy)"></div>精通（31 分以上）</div>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>資料來源</h2>
+          <p>詞彙來自教育部<a class="about-link" href="https://language.moe.gov.tw/uploads/files/17576672831025.pdf" target="_blank" rel="noopener">臺灣台語推薦用字 700 字詞</a></p>
+          <p>本站 fork 自 <a class="about-link" href="https://github.com/buttaiwan/buttaiwan.github.io" target="_blank" rel="noopener">buttaiwan/buttaiwan.github.io</a></p>
+          <p>音訊整理自 <a class="about-link" href="https://github.com/yiufung/minnan-700" target="_blank" rel="noopener">yiufung/minnan-700</a></p>
+          <p>音檔版權為林淑琪所有</p>
+        </div>
+      </div>
+
+      <!-- 華語版 -->
+      <div class="about-lang hide" id="about-zh">
+        <div class="about-section">
+          <p>因為自己想練習，所以整理前輩們的資源，再請 Claude 寫 99% 程式碼才完成的工具，希望能幫助到有同樣需求的大家。</p>
+          <p>製作：<a class="about-link" href="https://howmaywang.com" target="_blank" rel="noopener">皓梅</a>／顧問：<a class="about-link" href="https://kiantiong.com" target="_blank" rel="noopener">建中</a></p>
+        </div>
+        <div class="about-section">
+          <h2>練習模式</h2>
+          <ul class="about-list">
+            <li><strong>漢字</strong>：遮住漢字，看台羅與解說</li>
+            <li><strong>台羅</strong>：遮住台羅，看漢字與解說</li>
+            <li><strong>解說</strong>：遮住解說，看漢字與台羅</li>
+          </ul>
+        </div>
+        <div class="about-section">
+          <h2>回答模式</h2>
+          <ul class="about-list">
+            <li><strong>字卡</strong>：按「看答案」自評是否熟練</li>
+            <li><strong>拍字</strong>：用鍵盤輸入答案</li>
+          </ul>
+        </div>
+        <div class="about-section">
+          <h2>熟練度分數</h2>
+          <p>各詞有獨立熟練分數，依下列規則計算：</p>
+          <ul class="about-list compact">
+            <li>字卡按「熟手」<strong>+2</strong></li>
+            <li>字卡按「無熟手」<strong>+1</strong></li>
+            <li>拍字回答正確 <strong>+3</strong></li>
+            <li>拍字回答錯誤 <strong>+0</strong></li>
+          </ul>
+          <p>詞彙依分數累積升級：</p>
+          <div class="prof-legend">
+            <div class="prof-badge"><div class="prof-dot" style="background:#fff;border:1px solid var(--stone)"></div>未學（0 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:#bfcfe8"></div>接觸（1–5 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--slate)"></div>學習（6–15 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--blue)"></div>熟手（16–30 分）</div>
+            <div class="prof-badge"><div class="prof-dot" style="background:var(--navy)"></div>精通（31 分以上）</div>
+          </div>
+        </div>
+        <div class="about-section">
+          <h2>資料來源</h2>
+          <p>詞彙來自教育部<a class="about-link" href="https://language.moe.gov.tw/uploads/files/17576672831025.pdf" target="_blank" rel="noopener">臺灣台語推薦用字 700 字詞</a></p>
+          <p>本站 fork 自 <a class="about-link" href="https://github.com/buttaiwan/buttaiwan.github.io" target="_blank" rel="noopener">buttaiwan/buttaiwan.github.io</a></p>
+          <p>音訊整理自 <a class="about-link" href="https://github.com/yiufung/minnan-700" target="_blank" rel="noopener">yiufung/minnan-700</a></p>
+          <p>音檔版權為林淑琪所有</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 資料佮設定頁 -->
+<div id="settings-page" class="page hide">
+  <div class="page-header">
+    <button class="page-back" id="settings-back">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="page-title">資料佮設定</span>
+  </div>
+  <div class="page-body">
+    <div id="settings-content">
+      <div class="settings-section">
+        <div class="settings-section-title">偏好設定</div>
+        <div class="settings-row">
+          <div class="settings-row-label">
+            <span>字卡模式自動播音</span>
+          </div>
+          <button class="ios-toggle" id="autoplay-show-toggle" aria-label="字卡模式自動播音"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-label">
+            <span>拍字模式自動播音</span>
+          </div>
+          <button class="ios-toggle on" id="autoplay-type-toggle" aria-label="拍字模式自動播音"></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">資料管理</div>
+        <div class="settings-action-list">
+          <button class="settings-action-btn" id="export-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            匯出學習資料
+          </button>
+          <button class="settings-action-btn" id="import-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            匯入學習資料
+          </button>
+          <button class="settings-action-btn danger" id="settings-reset-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+            學習記錄重設定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- iOS 安裝引導 modal -->
+<div id="ios-install-modal" class="hide">
+  <div id="ios-install-overlay"></div>
+  <div id="ios-install-dialog">
+    <h3>安裝 App</h3>
+    <div class="ios-step">
+      <div class="ios-step-num">1</div>
+      <span>揤 Safari 下跤的「⋯」，閣揤「分享」</span>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-num">2</div>
+      <span>𫝻去下跤，選擇「加入主畫面」</span>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-num">3</div>
+      <span>揤「加入」</span>
+    </div>
+    <button id="ios-install-close">了解</button>
+  </div>
+</div>
+
+<!-- 匯入確認 modal -->
+<div id="import-modal" class="hide">
+  <div id="import-modal-overlay"></div>
+  <div id="import-dialog">
+    <h3>確認匯入</h3>
+    <p>這將覆蓋目前的學習資料，無法復原。</p>
+    <span id="import-detail"></span>
+    <div class="import-btns">
+      <button id="import-cancel">取消</button>
+      <button id="import-confirm">確認匯入</button>
+    </div>
+  </div>
+</div>
+<input type="file" id="import-file" accept=".json" style="display:none">
 
 <audio id="player"></audio>
 
@@ -476,9 +1573,13 @@ var mode = 'word';
 var answerMode = 'show';
 var onlyStarred = false;
 var currentQ = null;
+var savedAllQ = null;   // last card seen in 全部 pool
+var savedStarQ = null;  // last card seen in 收藏 pool
 
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
+
+var MISSING_AUDIO = { 100: true };
 
 var player = document.getElementById('player');
 
@@ -504,45 +1605,30 @@ var TONE_DIA = {
   '̋': 9, // a̋  double acute
 };
 
-// 將單一音節（允許含聲調符號或尾數字）轉為 base+數字 形式
-// 例：bô → bo5  kah → kah4  tsang9 → tsang9  a → a1
 function syllableToNumbered(syl) {
   syl = syl.trim().toLowerCase();
   if (!syl) return '';
-
-  // 已經有數字調號（字母後接單一數字）
   var numMatch = syl.match(/^([a-zÀ-ɏ]+)([1-9])$/i);
   if (numMatch) {
-    // 去掉字母部分的聲調符號（使用者可能混用）
     var base = numMatch[1].normalize('NFD').replace(/[̀-ͯ]/g, '');
     return base + numMatch[2];
   }
-
-  // 含聲調符號 → 掃描 NFD 找 combining char
   var nfd = syl.normalize('NFD');
   var tone = 0;
   var base = '';
   for (var i = 0; i < nfd.length; i++) {
     var t = TONE_DIA[nfd[i]];
-    if (t !== undefined) {
-      tone = t;
-    } else {
-      base += nfd[i];
-    }
+    if (t !== undefined) { tone = t; } else { base += nfd[i]; }
   }
-  // 無聲調符號：結尾 p/t/k/h 為第四調，否則第一調
   if (tone === 0) tone = /[ptkh]$/.test(base) ? 4 : 1;
   return base + tone;
 }
 
-// 將完整讀音字串（含 - 分隔）轉為 numbered form 陣列
 function readToNumbered(str) {
   return str.trim().split(/[\s-]+/).map(syllableToNumbered);
 }
 
 function optionalVariants(str) {
-  // "小可(仔)" → ["小可", "小可仔"]
-  // "sió-khuá(-á)" → ["sió-khuá", "sió-khuá-á"]
   var base = str.replace(/\(.*?\)/g, '').replace(/[-\s]+$/, '').replace(/[-\s]{2,}/g, '-').trim();
   var full = str.replace(/[()]/g, '').trim();
   return base === full ? [base] : [base, full];
@@ -554,12 +1640,8 @@ function checkAnswer(q, input) {
     var variants = optionalVariants(q.word);
     return variants.indexOf(inp) !== -1;
   }
-
-  // 台羅模式：必須調號正確（符號或數字皆可）
-  // 多音節必須有空格或 - 分隔
   var inputParts = input.trim().split(/[\s-]+/).map(syllableToNumbered);
   var inputKey = inputParts.join('-');
-
   var reads = (q.read || []).concat(q.read2 || []);
   for (var i = 0; i < reads.length; i++) {
     var variants = optionalVariants(reads[i]);
@@ -580,6 +1662,7 @@ function toHintSpans(q) {
   var res = '';
   for (var i = 0; i < parts.length; i++) {
     var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
+    var playBtn = MISSING_AUDIO[q.no] ? '' : '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>';
     res += '<span class="hint-item">'
          + '<span class="hint-text">' + display + '</span>'
          + '</span>'
@@ -613,20 +1696,316 @@ function removeMasks() {
   $('#word, #read, #mean').removeClass('masked');
 }
 
+// ── 偏好設定系統 ─────────────────────────────────────────
+
+var SETTINGS_KEY = 'taigi700_settings';
+
+function getSettings() {
+  var stored = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+  return {
+    autoplay_show: stored.autoplay_show !== undefined ? stored.autoplay_show : false,
+    autoplay_type: stored.autoplay_type !== undefined ? stored.autoplay_type : true
+  };
+}
+
+function saveSetting(key, val) {
+  var s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+  s[key] = val;
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+
+function initSettingsToggles() {
+  var s = getSettings();
+  $('#autoplay-show-toggle').toggleClass('on', !!s.autoplay_show);
+  $('#autoplay-type-toggle').toggleClass('on', !!s.autoplay_type);
+}
+
+// ── 熟練度系統 ──────────────────────────────────────────
+
+var PROF_KEY = 'taigi700_proficiency';
+
+function getProfData() {
+  return JSON.parse(localStorage.getItem(PROF_KEY) || '{}');
+}
+
+function addScore(no, delta) {
+  var data = getProfData();
+  data[no] = (data[no] || 0) + delta;
+  localStorage.setItem(PROF_KEY, JSON.stringify(data));
+}
+
+function scoreToProfLevel(score) {
+  if (score >= 31) return 4;
+  if (score >= 16) return 3;
+  if (score >= 6)  return 2;
+  if (score >= 1)  return 1;
+  return 0;
+}
+
+// ── 漢堡選單 ────────────────────────────────────────────
+
+function openMenu() {
+  $('#menu-overlay').removeClass('hide');
+  $('#menu-drawer').addClass('open');
+}
+
+function closeMenu() {
+  $('#menu-drawer').removeClass('open');
+  $('#menu-overlay').addClass('hide');
+}
+
+$('#menu-btn').click(openMenu);
+$('#menu-close').click(closeMenu);
+$('#menu-overlay').click(closeMenu);
+
+// ── 頁面切換 ─────────────────────────────────────────────
+
+function showPage(name) {
+  closeMenu();
+  if (name === 'overview') {
+    renderOverview();
+    $('#overview-page').removeClass('hide');
+  } else if (name === 'about') {
+    $('#about-page').removeClass('hide');
+  } else if (name === 'settings') {
+    initSettingsToggles();
+    $('#settings-page').removeClass('hide');
+  } else {
+    $('#overview-page').addClass('hide');
+    $('#about-page').addClass('hide');
+    $('#settings-page').addClass('hide');
+  }
+}
+
+$('#goto-overview, #desktop-goto-overview').click(function() { showPage('overview'); });
+$('#goto-about, #desktop-goto-about').click(function() { showPage('about'); });
+$('#goto-settings, #desktop-goto-settings').click(function() { showPage('settings'); });
+$('#overview-back').click(function() { showPage('quiz'); });
+$('#about-back').click(function() { showPage('quiz'); });
+$('#settings-back').click(function() { showPage('quiz'); });
+
+$('#settings-reset-btn').click(function() {
+  $('#reset-modal').removeClass('hide');
+});
+$('#reset-modal-overlay, #reset-cancel').click(function() {
+  $('#reset-modal').addClass('hide');
+});
+$('#reset-confirm').click(function() {
+  localStorage.removeItem(PROF_KEY);
+  localStorage.removeItem(MARKS_KEY);
+  $('#reset-modal').addClass('hide');
+  $('#star').removeClass('starred');
+  showToast('學習紀錄已重置');
+});
+
+// ── 自動播音 toggles ──────────────────────────────────────
+
+$('#autoplay-show-toggle').click(function() {
+  var isOn = $(this).hasClass('on');
+  $(this).toggleClass('on', !isOn);
+  saveSetting('autoplay_show', !isOn);
+  if (!isOn && currentQ && answerMode !== 'type') playAudio(wordAudioSrc(currentQ));
+});
+$('#autoplay-type-toggle').click(function() {
+  var isOn = $(this).hasClass('on');
+  $(this).toggleClass('on', !isOn);
+  saveSetting('autoplay_type', !isOn);
+  if (!isOn && currentQ && answerMode === 'type') playAudio(wordAudioSrc(currentQ));
+});
+
+// ── 匯出資料 ──────────────────────────────────────────────
+
+$('#export-btn').click(function() {
+  var dateStr = new Date().toISOString().split('T')[0];
+  var payload = {
+    version: 1,
+    exported: dateStr,
+    proficiency: JSON.parse(localStorage.getItem(PROF_KEY) || '{}'),
+    starred: localStorage.getItem(MARKS_KEY) || ''
+  };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'taigi700-' + dateStr + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('資料已匯出');
+});
+
+// ── 匯入資料 ──────────────────────────────────────────────
+
+var pendingImportData = null;
+
+$('#import-btn').click(function() {
+  $('#import-file').val('').trigger('click');
+});
+
+$('#import-file').on('change', function() {
+  var file = this.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (typeof data !== 'object' || (!data.proficiency && data.starred === undefined)) throw new Error('');
+      pendingImportData = data;
+      var profCount = Object.keys(data.proficiency || {}).length;
+      var starArr = (data.starred || '').replace(/^\&|\&$/g, '').split('&').filter(Boolean);
+      $('#import-detail').text('熟練度資料 ' + profCount + ' 筆，收藏 ' + starArr.length + ' 個詞');
+      $('#import-modal').removeClass('hide');
+    } catch(err) {
+      showToast('檔案格式不正確');
+    }
+  };
+  reader.readAsText(file);
+});
+
+$('#import-modal-overlay, #import-cancel').click(function() {
+  $('#import-modal').addClass('hide');
+  pendingImportData = null;
+});
+
+$('#import-confirm').click(function() {
+  if (!pendingImportData) return;
+  if (pendingImportData.proficiency) {
+    localStorage.setItem(PROF_KEY, JSON.stringify(pendingImportData.proficiency));
+  }
+  if (pendingImportData.starred !== undefined) {
+    localStorage.setItem(MARKS_KEY, pendingImportData.starred);
+  }
+  pendingImportData = null;
+  $('#import-modal').addClass('hide');
+  showToast('資料匯入成功');
+});
+
+$('#about-lang-toggle').on('click', '.alang-btn', function() {
+  var lang = $(this).data('lang');
+  $('.alang-btn').removeClass('active');
+  $(this).addClass('active');
+  $('.about-lang').addClass('hide');
+  $('#about-' + lang).removeClass('hide');
+});
+
+// ── 總覽頁渲染 ────────────────────────────────────────────
+
+var currentFilter = 'all';
+
+function renderOverview() {
+  var data = getProfData();
+  var counts = [0, 0, 0, 0, 0];
+  var starCount = 0;
+  var html = '';
+
+  // 一次讀取收藏清單建成 set
+  var marksSet = {};
+  var marksList = getMarks();
+  if (marksList) for (var m = 0; m < marksList.length; m++) marksSet[marksList[m]] = true;
+
+  for (var i = 0; i < moe700.length; i++) {
+    var q = moe700[i];
+    var score = data[q.no] || 0;
+    var level = scoreToProfLevel(score);
+    counts[level]++;
+    var starred = marksSet[q.no + ''] ? true : false;
+    if (starred) starCount++;
+    var displayWord = q.word.replace(/\(.*?\)/g, '').trim();
+    var displayRead = (q.read[0] || '').replace(/\(.*?\)/g, '').trim();
+    var visLen = displayRead.normalize('NFD').replace(/[̀-ͯ]/g, '').length;
+    var desktop = window.innerWidth >= 640;
+    var readSize = desktop
+      ? '20px'
+      : (visLen <= 4 ? '11px' : visLen <= 7 ? '10px' : visLen <= 10 ? '9px' : '8px');
+    html += '<button class="word-chip plv-' + level + '" data-plevel="' + level + '" data-no="' + q.no + '"'
+          + (starred ? ' data-starred="1"' : '') + '>'
+          + '<span class="chip-no">' + q.no + '</span>'
+          + '<span class="chip-hanzi">' + displayWord + '</span>'
+          + '<span class="chip-read" style="font-size:' + readSize + '">' + displayRead + '</span>'
+          + '</button>';
+  }
+
+  $('#overview-grid').html(html);
+
+  var learned = counts[1] + counts[2] + counts[3] + counts[4];
+  $('#overview-stats-inline').text(learned + ' / 700');
+
+  $('.filter-btn[data-level="all"]').text('全部 700');
+  $('.filter-btn[data-level="0"]').text('未學 ' + counts[0]);
+  $('.filter-btn[data-level="1"]').text('接觸 ' + counts[1]);
+  $('.filter-btn[data-level="2"]').text('學習 ' + counts[2]);
+  $('.filter-btn[data-level="3"]').text('熟練 ' + counts[3]);
+  $('.filter-btn[data-level="4"]').text('精通 ' + counts[4]);
+  $('.filter-btn[data-level="star"]').text('★ 收藏 ' + starCount);
+
+  applyOverviewFilter();
+}
+
+function applyOverviewFilter() {
+  if (currentFilter === 'all') {
+    $('#overview-grid').removeAttr('data-filter');
+  } else {
+    $('#overview-grid').attr('data-filter', currentFilter);
+  }
+}
+
+$('#overview-filter').on('click', '.filter-btn', function() {
+  $('.filter-btn').removeClass('active');
+  $(this).addClass('active');
+  currentFilter = $(this).data('level') + '';
+  applyOverviewFilter();
+});
+
+// 點擊字卡 → 從那個詞開始練習
+$(document).on('click', '.word-chip', function() {
+  var no = parseInt($(this).data('no'));
+  practiceWord(no);
+});
+
+function practiceWord(no) {
+  var target = null;
+  var rest = [];
+  for (var i = 0; i < moe700.length; i++) {
+    if (moe700[i].no === no) target = moe700[i];
+    else rest.push(moe700[i]);
+  }
+  // 洗牌其餘詞彙
+  for (var i = 0; i < rest.length; i++) {
+    var j = Math.floor(Math.random() * rest.length);
+    var tmp = rest[i]; rest[i] = rest[j]; rest[j] = tmp;
+  }
+  ques = [target].concat(rest);
+  qi = 0;
+  onlyStarred = false;
+  $('#toggle-all').addClass('active');
+  $('#toggle-star').removeClass('active');
+  $('#pool-toggle').removeClass('right');
+  showPage('quiz');
+  nextQuestion();
+}
+
+// ── 練習主流程 ────────────────────────────────────────────
+
+function shuffle(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var j = Math.floor(Math.random() * arr.length);
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
 function startMode() {
-  ques = [];
+  var pool = [];
   if (onlyStarred) {
     var marklist = getMarks();
     if (!marklist || marklist.length === 0) { showEmpty(); return; }
-    for (var i in marklist) ques.push(moe700[qindex[marklist[i]]]);
+    for (var i in marklist) pool.push(moe700[qindex[marklist[i]]]);
   } else {
-    for (var i in moe700) ques.push(moe700[i]);
+    for (var i in moe700) pool.push(moe700[i]);
   }
-  for (var i = 0; i < ques.length; i++) {
-    var j = Math.floor(Math.random() * ques.length);
-    if (i === j) continue;
-    var tmp = ques[i]; ques[i] = ques[j]; ques[j] = tmp;
-  }
+
+  ques = buildPriorityPool(pool);
   qi = 0;
   nextQuestion();
 }
@@ -644,6 +2023,8 @@ function showEmpty() {
   $('#listen-area').addClass('hide');
   $('#show').addClass('hide');
   $('#next').addClass('hide');
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
   $('#back').addClass('hide');
   $('#star').addClass('hide');
   $('#bottom-bar').addClass('hide');
@@ -658,6 +2039,8 @@ function nextQuestion() {
   if (q.audioId) $('#play-word-btn').removeClass('hide'); else $('#play-word-btn').addClass('hide');
   $('#empty-kaomoji').addClass('hide');
   $('#star').removeClass('hide');
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
 
   var reads1 = '';
   for (var r in q.read) reads1 += '<span>' + q.read[r] + '</span>';
@@ -666,6 +2049,8 @@ function nextQuestion() {
 
   $('#no').text('No. ' + q.no);
   $('#word').text(q.word);
+  var dictWord = q.word.replace(/\(.*?\)/g, '').trim();
+  $('#dict-btn').attr('href', 'https://sutian.moe.edu.tw/zh-hant/tshiau/?lui=tai_su&tsha=' + encodeURIComponent(dictWord));
   $('#read1').html(reads1);
   $('#read2').html(reads2);
   var meanText = q.mean.replace(/\(/g, '（').replace(/\)/g, '）');
@@ -675,16 +2060,18 @@ function nextQuestion() {
   applyMask();
 
   var isType = (answerMode === 'type') && (mode !== 'mean');
+  var _s = getSettings();
   if (isType) {
-    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅';
+    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅（聲調會使拍數字）';
     $('#listen-input').attr('placeholder', ph).val('').prop('disabled', false);
     $('#listen-result').html('');
     $('#listen-area').removeClass('hide');
     $('#show').text('確認答案').prop('disabled', true);
-    setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
+    if (_s.autoplay_type) setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
   } else {
     $('#listen-area').addClass('hide');
-    $('#show').text('對答案').prop('disabled', false);
+    $('#show').text('看答案').prop('disabled', false);
+    if (_s.autoplay_show) setTimeout(function() { playAudio(wordAudioSrc(q)); }, 200);
   }
 
   $('#star').removeClass('starred');
@@ -697,14 +2084,21 @@ function nextQuestion() {
   qi++;
 }
 
-function revealAnswer() {
+// skipAssess: 從「上一條」回去時，不顯示自評鈕
+function revealAnswer(skipAssess) {
   removeMasks();
   $('#show').addClass('hide');
-  $('#next').removeClass('hide');
   if (currentQ) revealHintWord(currentQ);
-  if ((answerMode === 'type') && (mode !== 'mean')) {
+  var isType = (answerMode === 'type') && (mode !== 'mean');
+  if (isType) {
     $('#listen-input').prop('disabled', true);
-    $('#show').prop('disabled', false); // reset for next question
+    $('#show').prop('disabled', false);
+    $('#next').removeClass('hide');
+  } else if (skipAssess) {
+    $('#next').removeClass('hide');
+  } else {
+    $('#knew-btn').removeClass('hide');
+    $('#unknown-btn').removeClass('hide');
   }
 }
 
@@ -724,9 +2118,22 @@ $('.mode-tab').click(function() {
     $('#answer-toggle').removeClass('hide');
   }
   if (!currentQ) { startMode(); return; }
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
   applyMask();
   refreshAnswerMode();
 });
+
+function buildPriorityPool(pool) {
+  var data = getProfData();
+  var groups = [[], [], [], [], []];
+  for (var i = 0; i < pool.length; i++) {
+    var level = scoreToProfLevel(data[pool[i].no] || 0);
+    groups[level].push(pool[i]);
+  }
+  return shuffle(groups[0]).concat(shuffle(groups[1])).concat(shuffle(groups[2]))
+    .concat(shuffle(groups[3])).concat(shuffle(groups[4]));
+}
 
 $('#toggle-all').click(function() {
   if (!onlyStarred) return;
@@ -734,7 +2141,20 @@ $('#toggle-all').click(function() {
   $('#toggle-all').addClass('active');
   $('#toggle-star').removeClass('active');
   $('#pool-toggle').removeClass('right');
-  startMode();
+
+  savedStarQ = currentQ;  // save 收藏 position
+
+  var pool = [];
+  for (var i in moe700) pool.push(moe700[i]);
+  ques = buildPriorityPool(pool);
+
+  if (savedAllQ) {
+    ques = ques.filter(function(q) { return q.no !== savedAllQ.no; });
+    ques.unshift(savedAllQ);
+  }
+  qi = 0;
+  $('#back').addClass('hide');
+  nextQuestion();
 });
 
 $('#toggle-star').click(function() {
@@ -743,25 +2163,44 @@ $('#toggle-star').click(function() {
   $('#toggle-star').addClass('active');
   $('#toggle-all').removeClass('active');
   $('#pool-toggle').addClass('right');
-  startMode();
+
+  savedAllQ = currentQ;  // save 全部 position
+
+  var marklist = getMarks();
+  if (!marklist || marklist.length === 0) { showEmpty(); return; }
+  var pool = [];
+  for (var i in marklist) pool.push(moe700[qindex[marklist[i]]]);
+  ques = buildPriorityPool(pool);
+
+  if (savedStarQ && isMarked(savedStarQ.no)) {
+    ques = ques.filter(function(q) { return q.no !== savedStarQ.no; });
+    ques.unshift(savedStarQ);
+  }
+  qi = 0;
+  $('#back').addClass('hide');
+  nextQuestion();
 });
 
 function refreshAnswerMode() {
   if (!currentQ) { startMode(); return; }
+  if (currentQ.sample) $('#hint').html(toHintSpans(currentQ));
+  $('#knew-btn').addClass('hide');
+  $('#unknown-btn').addClass('hide');
   var isType = (answerMode === 'type') && (mode !== 'mean');
   if (isType) {
-    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅';
+    var ph = mode === 'word' ? '輸入漢字' : '輸入台羅（聲調會使拍數字）';
     $('#listen-input').attr('placeholder', ph).val('').prop('disabled', false);
     $('#listen-result').html('');
     $('#listen-area').removeClass('hide');
     $('#show').text('確認答案').prop('disabled', true).removeClass('hide');
     $('#next').addClass('hide');
     applyMask();
-    setTimeout(function() { playAudio(wordAudioSrc(currentQ)); }, 200);
+    if (getSettings().autoplay_type) setTimeout(function() { playAudio(wordAudioSrc(currentQ)); }, 200);
   } else {
     $('#listen-area').addClass('hide');
-    $('#show').text('對答案').prop('disabled', false).removeClass('hide');
+    $('#show').text('看答案').prop('disabled', false).removeClass('hide');
     $('#next').addClass('hide');
+    if (getSettings().autoplay_show) setTimeout(function() { playAudio(wordAudioSrc(currentQ)); }, 200);
   }
 }
 
@@ -794,20 +2233,33 @@ $('#show').click(function() {
     var inp = $('#listen-input').val();
     if (inp.trim()) {
       var ok = checkAnswer(currentQ, inp);
+      var svgCheck = '<svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px"><polyline points="2,9 7,14 16,4"/></svg>';
+      var svgCross = '<svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px"><line x1="3.5" y1="3.5" x2="14.5" y2="14.5"/><line x1="14.5" y1="3.5" x2="3.5" y2="14.5"/></svg>';
       $('#listen-result').html(ok
-        ? '<span class="result-correct">✓ 正確！</span>'
-        : '<span class="result-wrong">✗ 毋著</span>');
+        ? '<span class="result-correct">' + svgCheck + '正確！</span>'
+        : '<span class="result-wrong">' + svgCross + '毋著</span>');
+      if (ok && currentQ) addScore(currentQ.no, 3);
     }
   }
-  revealAnswer();
+  revealAnswer(false);
 });
 
 $('#next').click(function() { nextQuestion(); });
 
+// 自評按鈕
+$('#knew-btn').click(function() {
+  if (currentQ) addScore(currentQ.no, 2);
+  nextQuestion();
+});
+$('#unknown-btn').click(function() {
+  if (currentQ) addScore(currentQ.no, 1);
+  nextQuestion();
+});
+
 $('#back').click(function() {
   qi -= 2;
   nextQuestion();
-  if (answerMode !== 'type') revealAnswer();
+  if (answerMode !== 'type') revealAnswer(true);
 });
 
 $('#listen-input').on('input', function() {
@@ -817,6 +2269,14 @@ $('#listen-input').on('keydown', function(e) {
   if (e.key === 'Enter' && !$('#show').prop('disabled')) $('#show').click();
 });
 
+// Enter 鍵快速操作（輸入框以外）
+$(document).on('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  if ($(document.activeElement).is('#listen-input')) return;
+  if (!$('#next').hasClass('hide')) { $('#next').click(); return; }
+  if (!$('#show').hasClass('hide') && !$('#show').prop('disabled')) { $('#show').click(); }
+});
+
 $('#star').click(function() {
   var no = currentQ ? currentQ.no : null;
   if (!no) return;
@@ -824,11 +2284,11 @@ $('#star').click(function() {
   if (wasStarred) {
     setMarked(no, false);
     $(this).removeClass('starred');
-    showToast('已從生份移除');
+    showToast('已經取消收藏');
   } else {
     setMarked(no, true);
     $(this).addClass('starred');
-    showToast('已加入生份的詞');
+    showToast('已經收藏');
   }
 });
 
@@ -852,7 +2312,47 @@ function setMarked(no, val) {
   localStorage.setItem(MARKS_KEY, marks);
 }
 
+// ── 加入主畫面 / PWA 安裝 ────────────────────────────────
+
+var deferredInstallPrompt = null;
+var isIOS = /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase());
+var isStandalone = (navigator.standalone === true) || window.matchMedia('(display-mode: standalone)').matches;
+
+if (!isStandalone) {
+  if (isIOS) $('#install-pwa-btn').removeClass('hide');
+}
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (!isStandalone) $('#install-pwa-btn').removeClass('hide');
+});
+
+window.addEventListener('appinstalled', function() {
+  deferredInstallPrompt = null;
+  $('#install-pwa-btn').addClass('hide');
+});
+
+$('#install-pwa-btn').click(function() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(function(result) {
+      if (result.outcome === 'accepted') {
+        deferredInstallPrompt = null;
+        $('#install-section').addClass('hide');
+      }
+    });
+  } else if (isIOS) {
+    $('#ios-install-modal').removeClass('hide');
+  }
+});
+
+$('#ios-install-overlay, #ios-install-close').click(function() {
+  $('#ios-install-modal').addClass('hide');
+});
+
 startMode();
+
 
 </script>
 </body>
