@@ -1579,16 +1579,27 @@ var savedStarQ = null;  // last card seen in 收藏 pool
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
 
-var MISSING_AUDIO = { 100: true };
+var MISSING_AUDIO = {};
+
+var CUSTOM_AUDIO = { 100: 'audio/custom/6.mp3', 647: 'audio/custom/5.mp3' };
 
 var player = document.getElementById('player');
 
 function playAudio(src) {
   player.src = src;
   player.play().catch(function() {});
+  if ('mediaSession' in navigator && currentQ) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: currentQ.word,
+      artist: (currentQ.read || []).join(' '),
+      album: '台語 700 單字卡',
+      artwork: [{ src: 'icon-192.png', sizes: '192x192', type: 'image/png' }]
+    });
+  }
 }
 
 function wordAudioSrc(q) {
+  if (CUSTOM_AUDIO[q.no]) return CUSTOM_AUDIO[q.no];
   return 'audio/minnan700-' + q.no + '-' + q.word.replace(/\(.*?\)/g, '') + '.mp3';
 }
 
@@ -2362,6 +2373,46 @@ $('#ios-install-overlay, #ios-install-close').click(function() {
 });
 
 startMode();
+
+// ── Service Worker + 音檔快取 ─────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(function(reg) {
+    navigator.serviceWorker.addEventListener('message', function(e) {
+      if (e.data.type === 'SW_READY') startAudioCache();
+      if (e.data.type === 'CACHE_PROGRESS') {
+        var pct = Math.round(e.data.done / e.data.total * 100);
+        showCacheToast('音檔快取中 ' + pct + '%', true);
+      }
+      if (e.data.type === 'CACHE_DONE') {
+        showCacheToast('已可離線使用 ✓', false);
+      }
+    });
+    // If SW already active, start caching immediately
+    if (reg.active) startAudioCache();
+  });
+}
+
+var _cacheStarted = false;
+function startAudioCache() {
+  if (_cacheStarted) return;
+  _cacheStarted = true;
+  fetch('audio-files.json').then(function(r) { return r.json(); }).then(function(files) {
+    navigator.serviceWorker.controller && navigator.serviceWorker.controller.postMessage({
+      type: 'CACHE_AUDIO', files: files
+    });
+  });
+}
+
+var _cacheToast = null;
+function showCacheToast(msg, persistent) {
+  if (_cacheToast) _cacheToast.remove();
+  _cacheToast = $('<div class="toast" style="bottom:180px;font-size:13px">' + msg + '</div>').appendTo('body');
+  setTimeout(function() { _cacheToast && _cacheToast.addClass('show'); }, 10);
+  if (!persistent) {
+    setTimeout(function() { _cacheToast && _cacheToast.removeClass('show'); }, 3000);
+    setTimeout(function() { if (_cacheToast) { _cacheToast.remove(); _cacheToast = null; } }, 3500);
+  }
+}
 
 
 </script>
