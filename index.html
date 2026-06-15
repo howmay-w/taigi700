@@ -1581,7 +1581,7 @@ for (var i in moe700) qindex[moe700[i].no + ''] = i;
 
 var MISSING_AUDIO = {};
 
-var CUSTOM_AUDIO = { 100: 'audio/custom/6.mp3', 647: 'audio/custom/5.mp3' };
+var CUSTOM_AUDIO = { 59: 'audio/minnan700-59-尾蝶仔.mp3', 100: 'audio/custom/6.mp3', 647: 'audio/custom/5.mp3' };
 
 var player = document.getElementById('player');
 
@@ -1600,7 +1600,7 @@ function playAudio(src) {
 
 function wordAudioSrc(q) {
   if (CUSTOM_AUDIO[q.no]) return CUSTOM_AUDIO[q.no];
-  return 'audio/minnan700-' + q.no + '-' + q.word.replace(/\(.*?\)/g, '') + '.mp3';
+  return 'audio/minnan700-' + q.no + '-' + q.word + '.mp3';
 }
 
 function sampleAudioSrc(q, rawItem) {
