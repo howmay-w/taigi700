@@ -1674,8 +1674,9 @@ function toHintSpans(q) {
 }
 
 function revealHintWord(q) {
+  var wordBase = q.word.replace(/\(.*?\)/g, '');
   $('#hint .blank').each(function() {
-    $(this).replaceWith('<span class="hint-word">' + q.word + '</span>');
+    $(this).replaceWith('<span class="hint-word">' + wordBase + '</span>');
   });
 }
 
