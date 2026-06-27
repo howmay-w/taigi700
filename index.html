@@ -2422,7 +2422,7 @@ function showCacheToast(msg, persistent) {
   if (_cacheToast) {
     _cacheToast.html(msg);
   } else {
-    _cacheToast = $('<div class="toast" style="bottom:180px;font-size:13px;min-width:160px;text-align:center">' + msg + '</div>').appendTo('body');
+    _cacheToast = $('<div class="toast" style="bottom:180px;min-width:160px;text-align:center">' + msg + '</div>').appendTo('body');
     setTimeout(function() { _cacheToast && _cacheToast.addClass('show'); }, 10);
   }
   if (!persistent) {
