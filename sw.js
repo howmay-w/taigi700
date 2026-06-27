@@ -1,4 +1,4 @@
-var CACHE = 'taigi700-v1';
+var CACHE = 'taigi700-v2';
 
 var STATIC = [
   '.',

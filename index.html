@@ -2414,13 +2414,20 @@ function startAudioCache() {
 }
 
 var _cacheToast = null;
+var _cacheToastHideTimer = null;
+var _cacheToastRemoveTimer = null;
 function showCacheToast(msg, persistent) {
-  if (_cacheToast) _cacheToast.remove();
-  _cacheToast = $('<div class="toast" style="bottom:180px;font-size:13px">' + msg + '</div>').appendTo('body');
-  setTimeout(function() { _cacheToast && _cacheToast.addClass('show'); }, 10);
+  clearTimeout(_cacheToastHideTimer);
+  clearTimeout(_cacheToastRemoveTimer);
+  if (_cacheToast) {
+    _cacheToast.html(msg);
+  } else {
+    _cacheToast = $('<div class="toast" style="bottom:180px;font-size:13px">' + msg + '</div>').appendTo('body');
+    setTimeout(function() { _cacheToast && _cacheToast.addClass('show'); }, 10);
+  }
   if (!persistent) {
-    setTimeout(function() { _cacheToast && _cacheToast.removeClass('show'); }, 3000);
-    setTimeout(function() { if (_cacheToast) { _cacheToast.remove(); _cacheToast = null; } }, 3500);
+    _cacheToastHideTimer = setTimeout(function() { _cacheToast && _cacheToast.removeClass('show'); }, 3000);
+    _cacheToastRemoveTimer = setTimeout(function() { if (_cacheToast) { _cacheToast.remove(); _cacheToast = null; } }, 3500);
   }
 }
 
