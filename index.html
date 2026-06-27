@@ -2394,6 +2394,7 @@ if ('serviceWorker' in navigator) {
         showCacheToast('音檔快取中 ' + pct + '%', true);
       }
       if (e.data.type === 'CACHE_DONE') {
+        try { localStorage.setItem(AUDIO_CACHE_FLAG, String(e.data.total)); } catch (err) {}
         showCacheToast('已可離線使用 ✓', false);
       }
     });
@@ -2402,11 +2403,15 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+var AUDIO_CACHE_FLAG = 'taigi700AudioCacheDone';
 var _cacheStarted = false;
 function startAudioCache() {
   if (_cacheStarted) return;
   _cacheStarted = true;
   fetch('audio-files.json').then(function(r) { return r.json(); }).then(function(files) {
+    var done;
+    try { done = localStorage.getItem(AUDIO_CACHE_FLAG); } catch (err) { done = null; }
+    if (done === String(files.length)) return;
     navigator.serviceWorker.controller && navigator.serviceWorker.controller.postMessage({
       type: 'CACHE_AUDIO', files: files
     });
