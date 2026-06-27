@@ -51,6 +51,7 @@
 @font-face {
   font-family: NunitoPOJ;
   src: url(NunitoPOJ-Regular.ttf) format('truetype');
+  font-display: swap;
 }
 
 /* ── 色彩 tokens ──────────────────────────────────────────
@@ -105,6 +106,8 @@ button { user-select: none; -webkit-user-select: none; }
   padding: 4px 0;
 }
 #header-title {
+  margin: 0;
+  font-weight: normal;
   font-family: 'Huninn', sans-serif;
   font-size: 17px;
   color: rgba(255,255,255,0.75);
@@ -1939,7 +1942,7 @@ button { user-select: none; -webkit-user-select: none; }
 
 <div id="header">
   <div id="header-title-row">
-    <span id="header-title">台語 700 單字卡</span>
+    <h1 id="header-title">台語 700 單字卡</h1>
     <div id="desktop-nav">
       <button class="desktop-nav-btn" id="desktop-goto-overview">字卡總覽</button>
       <button class="desktop-nav-btn" id="desktop-goto-about">介紹</button>
