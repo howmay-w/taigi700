@@ -1579,9 +1579,15 @@ var savedStarQ = null;  // last card seen in 收藏 pool
 var qindex = {};
 for (var i in moe700) qindex[moe700[i].no + ''] = i;
 
-var MISSING_AUDIO = {};
+var MISSING_AUDIO = { 101: true };
+
+var MISSING_SAMPLE_AUDIO = { '100:～人': true, '134:食～': true };
 
 var CUSTOM_AUDIO = { 59: 'audio/minnan700-59-尾蝶仔.mp3', 100: 'audio/custom/6.mp3', 647: 'audio/custom/5.mp3' };
+
+var AUDIO_WORD_OVERRIDE = { 149: '亻因', 506: '癩哥' };
+
+var AUDIO_TEXT_OVERRIDE = { '255:～乾': '弓蕉亁', '420:～無摠': '捎無總', '149:～三个': '亻因三個' };
 
 var player = document.getElementById('player');
 
@@ -1600,12 +1606,16 @@ function playAudio(src) {
 
 function wordAudioSrc(q) {
   if (CUSTOM_AUDIO[q.no]) return CUSTOM_AUDIO[q.no];
-  return 'audio/minnan700-' + q.no + '-' + q.word + '.mp3';
+  var word = AUDIO_WORD_OVERRIDE[q.no] || q.word;
+  return 'audio/minnan700-' + q.no + '-' + word + '.mp3';
 }
 
 function sampleAudioSrc(q, rawItem) {
-  var wordBase = q.word.replace(/\(.*?\)/g, '');
-  var fname = rawItem.replace(/～/g, wordBase).replace(/，/g, ',');
+  var override = AUDIO_TEXT_OVERRIDE[q.no + ':' + rawItem];
+  if (override) return 'audio/minnan700-' + q.no + '-' + override + '.mp3';
+  var word = AUDIO_WORD_OVERRIDE[q.no] || q.word;
+  var wordBase = word.replace(/\(.*?\)/g, '');
+  var fname = rawItem.replace(/～/g, wordBase).replace(/，/g, ',').replace(/……/g, '......');
   return 'audio/minnan700-' + q.no + '-' + fname + '.mp3';
 }
 
@@ -1678,7 +1688,7 @@ function toHintSpans(q) {
   for (var i = 0; i < parts.length; i++) {
     var src = sampleAudioSrc(q, parts[i]);
     var display = parts[i].replace(/～/g, '<span class="blank">＿</span>');
-    var playBtn = MISSING_AUDIO[q.no] ? '' : '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>';
+    var playBtn = MISSING_SAMPLE_AUDIO[q.no + ':' + parts[i]] ? '' : '<button class="hint-play" data-src="' + src + '">' + playSvg() + '</button>';
     res += '<span class="hint-item">'
          + '<span class="hint-text">' + display + '</span>'
          + playBtn
