@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://howmay-w.github.io/taigi700/sitemap.xml
